@@ -1,0 +1,1653 @@
+openapi: 3.0.3
+info:
+  title: Technical Design Document By QuickFix
+  description: |-
+      Document contains API endpoint descriptions based on design document for the Point Of Sale system made by PRADa team.
+      
+      IMPORTANT: this documentation doesn't align fully with original design document because of the necessary changes.
+      
+      For the information about changes that haven been made please check attached "QuickFix_Technical_Design_Document.docx" file.
+  version: 1.0.11
+tags:
+  - name: user
+    description: user object operations
+  - name: staff member
+    description: staff member object operations
+  - name: payment
+    description: Operations regarding payments
+  - name: ingredient
+    description:  ingredient operations by manager, worker
+  - name: order
+    description:  order operations
+  - name: reservation
+    description:  reservation operations
+  - name: report
+    description:  periodical report actions 
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: Creates user account
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the their account
+      description: 'Username and password sent as parameters. Response body is user object with headers.'
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the customer
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid customer name/password supplied
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out currently logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        '200':
+          description: Successful operation
+  /user/{userID}:
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a user that needs to be updated.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Request body contains user object with updated information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful operation. Response body contains user object with updated information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a user that needs to be deleted from database.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation. Deleted user
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: User not found
+    get:
+      tags:
+        - user
+      summary: Get user by user ID
+      description: ''
+      operationId: getUserByID
+      parameters:
+        - name: userID
+          in: path
+          description: The ID of a user that needs to be fetched.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: User not found by this ID
+  /user/list/findByType:
+    get:
+      tags:
+        - user
+      summary: Finds users by their type
+      description: User type needs to be provided
+      operationId: findPetsByStatus
+      parameters:
+        - name: type
+          in: query
+          description: User type value that needs to be considered for filter
+          required: true
+          schema:
+            type: string
+            enum:
+              - staff
+              - customer
+      responses:
+        '200':
+          description: Successful operation. Array of users with searched type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user type value
+  /user/{username}:
+    get:
+      tags:
+        - user
+      summary: Get user by user username
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: The username of a user that needs to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  /staffmember:
+     post:
+      tags:
+        - staff member
+      summary: Operations regarding the employee
+      description: Operations can be performed only by manager
+      operationId: createStaffMember
+      requestBody:
+        description: Created staff member object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffMember'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/StaffMember'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffMember'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StaffMember'
+        '400':
+          description: Bad request
+  /staffmember/{userID}:
+    put:
+      tags:
+        - staff member
+      summary: Update staff member
+      description: This can only be done by the logged in manager.
+      operationId: updateStaffMember
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a staff member that needs to be updated.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Request body contains staff member object with updated information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffMember'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/StaffMember'
+      responses:
+        '200':
+          description: Successful operation. Response body contains staff member object with updated information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffMember'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StaffMember'
+        '400':
+          description: Bad request
+    delete:
+      tags:
+        - staff member
+      summary: Delete staff member
+      description: This can only be done by the logged in manager.
+      operationId: deleteStaffMember
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a staff member that needs to be deleted from database.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation. Deleted staff member
+        '400':
+          description: Bad request
+    get:
+      tags:
+        - staff member
+      summary: Get staff member by ID
+      description: Can be performed only by logged in manager
+      operationId: getStaffMemberByID
+      parameters:
+        - name: userID
+          in: path
+          description: The ID of a staff member that needs to be fetched.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffMember'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StaffMember'
+        '400':
+          description: Bad request
+  /staffmember/list/findByPosition:
+    get:
+      tags:
+        - staff member
+      summary: Get list of staff members by their position
+      description: Can be performed only by logged in manager
+      operationId: getStaffMembersListByPosition
+      parameters:
+        - name: position
+          in: query
+          description: Staff members position value that needs to be considered for filter
+          required: true
+          schema:
+            type: string
+            example: waiter
+      responses:
+        '200':
+          description: Successful operation. Array of staff members with specific position
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffMember'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffMember'
+        '400':
+          description: Invalid user type value
+  /payment:
+    post:
+      tags:
+        - payment
+      summary: Create payment
+      description: Payment object is automatically created when new order/reservation is placed 
+      operationId: createPayment
+      requestBody:
+        description: Request body contains created payment object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Payment'
+      responses:
+        '200':
+          description: successful operation. Created new payment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Bad request
+  /payment/{paymentID}:
+    put:
+      tags:
+        - payment
+      summary: Update payment information
+      description: This can only be done by the logged in cashier or customer.
+      operationId: updatePayment
+      parameters:
+        - name: paymentID
+          in: path
+          description: ID the payment that needs to be updated.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Request body contains payment object with updated information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Payment'
+      responses:
+        '200':
+          description: Successful operation. Response body contains payment object with updated information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Bad request
+    delete:
+      tags:
+        - payment
+      summary: Delete payment
+      description: This can only be done by the logged in cashier.
+      operationId: deletePayment
+      parameters:
+        - name: paymentID
+          in: path
+          description: ID payment that needs to be deleted from database.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation. Deleted payment
+        '400':
+          description: Bad request
+    get:
+      tags:
+        - payment
+      summary: Get payment by ID
+      description: Can be performed only by logged in manager or cashier
+      operationId: getPaymentByID
+      parameters:
+        - name: paymentID
+          in: path
+          description: The ID of the payment that needs to be fetched.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation. Response body contains fetched payment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Bad request
+  /payment/list:
+    get:
+      tags:
+        - payment
+      summary: Get list of all payments.
+      description: Gets list of all payments
+      operationId: getListOfPayments
+      responses:
+        '200':
+          description: successful operation. Response is list of all payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          description: Bad request
+  /payment/list/{userID}:
+    get:
+      tags:
+        - payment
+      summary: Get list of payments of the specific user
+      description: Gets list of payments
+      operationId: getUsersPayments
+      parameters:
+        - name: userID
+          in: path
+          description: The ID of a user whose all payments need to be fetched
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation. Response contains list of specific user's payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          description: Bad request
+  /payment/list/{userID}/findByStatus:
+    get:
+      tags:
+        - payment
+      summary: Get list of specific customer's payments by status
+      description: Can be performed only by logged in user, manager or cashier
+      operationId: getUsersPaymentsByIdStatus
+      parameters:
+        - name: userID
+          in: path
+          description: Customer's ID whose payments we want to fetch
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: position
+          in: query
+          description: Specific status that payments need to have
+          required: true
+          schema:
+            type: string
+            example: Waiting
+      responses:
+        '200':
+          description: Successful operation. Array of payment objects of specific user that have specific status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          description: Invalid user type value
+  /order:
+    post:
+      tags:
+        - order
+      summary: Create an order. Performed by customer.
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad request
+  /order/list:
+    get:
+      tags:
+        - order
+      summary: get information about all orders
+      description: ''
+      operationId: checkOrders
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad request
+  /order/{status}:
+    get:
+      tags:
+        - order
+      summary: Find orders by status
+      description: Returns a list of orders by status
+      operationId: getOrderByStatus
+      parameters:
+        - name: status
+          in: path
+          description: status of orders to return
+          required: true
+          schema:
+            type: string
+            enum: [Placed, Approved, Ready, Completed, Cancelled]
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'          
+        '400':
+          description: Invalid status supplied
+        '404':
+          description: Order not found
+  /order/{orderID}:
+    get:
+      tags:
+        - order
+      summary: Find order by ID
+      operationId: getOrderById
+      parameters:
+        - name: orderID
+          in: path
+          description: ID of order that needs to be fetched
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Order not found
+  /order/list/{userID}:
+    get:
+      tags:
+        - order
+      summary: Get list of user's orders
+      description: Get list of all orders
+      operationId: ordersList
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad request
+  /order/list/{userID}/{status}:
+    get:
+      tags:
+        - order
+      summary: Get list of user's orders by status
+      description: ''
+      operationId: ordersListByStatus
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: status
+          in: path
+          description: status of orders to return
+          required: true
+          schema:
+            type: string
+            enum: [Placed, Approved, Ready, Completed, Cancelled]
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad request
+        '404':
+          description: User not found
+  /order/{orderID}/modify:
+    put:
+      tags:
+        - order
+      summary: Update an order by ID
+      description: Manager and cashier can update details and status. Worker can only update status.
+      operationId: updateOrder
+      parameters:
+        - name: orderID
+          in: path
+          description: ID of order to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update an existent order 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Order not found
+        '405':
+          description: Validation exception            
+    delete:
+      tags:
+        - order
+      summary: delete an order
+      operationId: deleteOrder
+      parameters:
+        - name: orderID
+          in: path
+          description: order that needs to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Resource deleted successfully
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Reservation not found
+  /ingredients/{name}:
+    get:
+      tags:
+        - ingredient
+      summary: Find ingredient by name
+      description: Returns a list of ingredients by name
+      operationId: getIngredientsByName
+      parameters:
+        - name: name
+          in: path
+          description: name of ingredients to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'          
+        '400':
+          description: Invalid status supplied
+        '404':
+          description: Ingredient not found
+  /ingredient/list:
+    get:
+      tags:
+        - ingredient
+      summary: get information about the whole ingredient inventory
+      description: ''
+      operationId: checkIngredient
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+  /ingredient/list/findByStockStatus:
+    get:
+      tags:
+        - ingredient
+      summary: Get list of ingredients by stock status
+      description: Returns a list of ingredients by stock status
+      operationId: getListIngredientsByStockStatus
+      parameters:
+        - name: status
+          in: query
+          description: Specific stock status that ingredients need to have
+          required: true
+          schema:
+            type: string
+            enum: [InStock, ComingSoon, OutOfStock]
+      responses:
+        '200':
+          description: successful operation. Response contains list of ingredients that have specific stock status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'          
+        '400':
+          description: Invalid status supplied
+        '404':
+          description: Order not found
+  /ingredient/{ingredientID}:
+    get:
+      tags:
+        - ingredient
+      summary: find ingredient by ID
+      operationId: getIngredientByID
+      parameters:
+        - name: ingredientID
+          in: path
+          description: ID of ingredient to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Ingredient not found
+  /ingredient/{ingredientID}/modify:            
+    put:
+      tags:
+        - ingredient
+      summary: Update an ingredient
+      description: Manager can update details and status. Worker can only update status.
+      operationId: updateIngredient
+      parameters:
+        - name: ingredientID
+          in: path
+          description: ID of ingredient to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update an existent ingredient 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Ingredient not found
+    delete:
+      tags:
+        - ingredient
+      summary: remove an ingredient from inventory
+      operationId: deleteIngredient
+      parameters:
+        - name: ingredientID
+          in: path
+          description: ingredient that needs to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Resource deleted successfully
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Ingredient not found
+  /ingredient:
+    post:
+      tags:
+        - ingredient
+      summary: add an ingredient to inventory list
+      operationId: addIngredient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Bad request
+
+  /reservations/{status}:
+    get:
+      tags:
+        - reservation
+      summary: Find reservations by status
+      description: Returns a list of reservations by status
+      operationId: getReservationsByStatus
+      parameters:
+        - name: status
+          in: path
+          description: status of reservations to return
+          required: true
+          schema:
+            type: string
+            enum: [Placed, Approved, Completed, Cancelled]
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'          
+        '400':
+          description: Invalid status supplied
+        '404':
+          description: Reservation not found
+  /reservation/{reservationID}:
+    get:
+      tags:
+        - reservation
+      summary: Find reservation by ID
+      operationId: getReservationById
+      parameters:
+        - name: reservationID
+          in: path
+          description: ID of reservation that needs to be fetched
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'  
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Reservation not found 
+  /reservation/list:
+    get:
+      tags:
+        - reservation
+      summary: get information about all reservations
+      operationId: checkReservations
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Bad request
+  /reservation/{reservationID}/modify:
+    put:
+      tags:
+        - reservation
+      summary: Update reservation by ID.
+      description: Manager and cashier can update details and status. Worker can only update status.
+      parameters:
+        - name: reservationID
+          in: path
+          description: ID of reservation to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      operationId: updateReservation
+      requestBody:
+        description: update a reservation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Reservation not found
+    delete:
+      tags:
+        - reservation
+      summary: delete a reservation
+      operationId: deleteReservation
+      parameters:
+        - name: reservationID
+          in: path
+          description: reservation that needs to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Resource deleted successfully
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Reservation not found
+  /reservation:
+    post:
+      tags:
+        - reservation
+      summary: Create a reservation. Performed by manager, cashier or customer..
+      operationId: createReservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Bad request
+  /reservation/list/{userID}:
+    get:
+      tags:
+        - reservation
+      summary: Get list of user's reservations 
+      description: Gets list of reservations that were made by specific user
+      parameters:
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      operationId: getUsersReservationList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Bad request
+  /report/generate:
+    post:
+      tags:
+        - report
+      summary: Generate a periodical analysis report 
+      operationId: generateReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  ID:
+                    type: integer
+                  StartTime:
+                    type: string
+                    format: date-time
+                  EndTime:
+                    type: string
+                    format: date-time
+                  StaffID:
+                    type: integer
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          description: Bad request
+  /report/findByDate:
+    get:
+      tags:
+        - report
+      summary: Get periodical reports by date
+      operationId: checkReportsByDate
+      parameters:
+        - name: Start
+          in: query
+          description: start of a specific period of time
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: End
+          in: query
+          description: end of a specific period of time
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+  /report/findByStaffWorker:
+    get:
+      tags:
+        - report
+      summary: Get periodical reports by staff worker
+      operationId: checkReportsByStaff
+      parameters:
+        - name: StaffMemberID
+          in: query
+          description: staff worker ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+  /report/analytics:
+    get:
+      tags:
+        - report
+      summary: get periodical analytics data
+      operationId: checkAnalytics
+      parameters:
+        - name: Start
+          in: query
+          description: start of a specific period of time
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: End
+          in: query
+          description: end of a specific period of time
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    StartTime:
+                      type: string
+                      format: date
+                    EndTime:
+                      type: string
+                      format: date
+                    TotalRevenue:
+                      type: number
+                      format: double
+                      example: 199000
+  /cashier:
+    post:
+      tags:
+        - cashier
+      summary: Swipe card to get a new access to the system
+      description: ''
+      operationId: swipeCard
+      parameters:
+        - in: query
+          name: User
+          description: Swiping card provides the system with employee's credentials and starts the system specifically for that employee.
+          required: true
+          schema:
+            $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid input
+  /cashier/splitBill:
+    get:
+      tags:
+        - cashier
+      summary: get periodical analytics data
+      operationId: splitBill
+      parameters:
+        - name: NumOfPeople
+          in: query
+          description: Number of people that want to split the bill
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderID
+          in: query
+          description: Order's that should be split ID
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  IndividualPrice:
+                    type: array
+                    items:
+                      type: number
+        '400':
+          description: Invalid ID supplied
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 5
+        CustomerID:
+          type: integer
+          format: int64
+          example: 5
+        Dishes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dish'
+        Payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+        OrderDate:
+          type: string
+          format: date-time
+        CompletionDate:
+          type: string
+          format: date-time
+        Status:
+          type: string
+          description: Order Status
+          example: Completed
+          enum:
+            - Placed
+            - Approved
+            - Ready
+            - Completed
+            - Cancelled
+    Dish:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: Tomato soup
+        Ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        Price:
+          type: number
+          format: double
+          example: 3
+    Ingredient:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 15
+        Name:
+          type: string
+          example: potato
+        Price:
+          type: number
+          format: double
+          example: 1.50
+        Quantity:
+          type: integer
+          format: int64
+          example: 20
+        StockStatus:
+          type: string
+          description: ingredient stock status
+          example: InStock
+          enum:
+            - InStock
+            - ComingSoon
+            - OutOfStock
+    Reservation:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 85
+        Name:
+          type: string
+          example: someReservationName
+        Time:
+          type: string
+          format: date-time
+        NumOfPeople:
+          type: integer
+          format: int64
+          example: 4
+        TableNumber:
+          type: integer
+          format: int64
+          example: 5
+        CustomerID:
+          type: integer
+          format: int64
+          example: 25
+        Status:
+          type: string
+          description: reservation status
+          example: Placed
+          enum:
+            - Placed
+            - Approved
+            - Completed
+            - Cancelled
+    Report:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 1
+        StartTime:
+          type: string
+          format: date-time
+        EndTime:
+          type: string
+          format: date-time
+        DailyRevenue:
+          type: integer
+          format: int64
+          example: 2000
+        StaffID:
+          type: integer
+          format: int64  
+          example: 20
+    User:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 10
+        BusinessId:
+          type: integer
+          format: int64
+          example: 15
+        Name:
+          type: string
+          example: John
+        Surname:
+          type: string
+          example: Smith
+        Age:
+          type: integer
+          format: int64
+          example: 30
+        Username:
+          type: string
+          example: John Smith30
+        Email:
+          type: string
+          example: johnsmith30@gmail.com
+        Password:
+          type: string
+          example: John30Smith15
+        UserType:
+          type: string
+          description: User Status
+          example: customer
+          enum:
+            - staff
+            - customer
+    StaffMember:
+      type: object
+      properties:
+        UserID:
+          type: integer
+          format: int64
+          example: 10
+        Position:
+          type: string
+          example: Manager
+        Salary:
+          type: number
+          format: double
+          example: 1200.64
+    Business:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 5
+        Location:
+          type: array
+          items: 
+            type: object
+            $ref: '#/components/schemas/Address'
+        Type:
+          type: string
+          example: Restaurant
+        ManagerID: 
+          type: integer
+          format: int64
+          example: 5
+    Tax:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 5
+        Payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+        QuarterlyPayments:
+          type: number
+          format: double
+          example: 15000
+        TaxBracket:
+          type: number
+          format: double
+          example: 21
+        TaxesOwed:
+          type: number
+          format: double
+          example: 10000
+        Paid:
+          type: boolean
+          example: true
+    Payment:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 75
+        CustomerID:
+          type: integer
+          format: int64
+          example: 75
+        OrderID:
+          type: integer
+          format: int64
+          example: 5
+        PriceOfOrder:
+          type: number
+          format: double
+          example: 50.64
+        Discount:
+          type: number
+          format: percentage
+          example: 5
+        Tip:
+          type: number
+          format: double
+          example: 3
+        PaymentOptions:
+          type: string
+          description: Form in which payment was made
+          example: Cash
+          enum:
+            - Cash
+            - Check
+            - Credit card
+            - Debit card
+            - Online payment
+        Status:
+          type: string
+          description: Status of the payment
+          example: Completed
+          enum:
+            - Completed
+            - Cancelled
+            - In progress
+            - Waiting
+        TimeWhenCompleted:
+          type: string
+          format: date-time
+    Address:
+      type: object
+      properties:
+        Country:
+          type: string
+          example: Lithuania
+        City:
+          type: string
+          example: Vilnius
+        Street:
+          type: string
+          example: Dominikonų
+        BuildingNumber:
+          type: integer
+          format: int64
+          example: 11
+        PostCode:
+          type: string
+          example: LT-01131
+        Floor:
+          type: array
+          items:
+            type: integer
+            example: [1,2,3]
