@@ -4,7 +4,7 @@ using PoSSapi.Domain.Enums;
 
 public class Reservation
 {
-    public int ID { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public DateTime Time { get; set; }
     public int NumOfPeople { get; set; }

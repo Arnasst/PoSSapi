@@ -4,7 +4,7 @@ using PoSSapi.Domain.Enums;
 
 public class Payment
 {
-    public int ID { get; set; }
+    public Guid Id { get; set; }
     public int CustomerID { get; set; }
     public int OrderID { get; set; }
     public float PriceOfOrder { get; set; }
