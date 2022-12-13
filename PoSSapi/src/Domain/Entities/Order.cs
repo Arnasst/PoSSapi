@@ -1,5 +1,7 @@
 namespace PoSSapi.Domain.Entities;
 
+using PoSSapi.Domain.Enums;
+
 public class Order
 {
     public int ID { get; set; }
@@ -8,5 +10,5 @@ public class Order
     public List<Payment> Payments { get; set; }
     public DateTime OrderDate { get; set; }
     public DateTime CompletionDate { get; set; }
-    public string Status { get; set; } // Enum
+    public OrderStatus Status { get; set; }
 }

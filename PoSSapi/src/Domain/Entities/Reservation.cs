@@ -1,5 +1,7 @@
 namespace PoSSapi.Domain.Entities;
 
+using PoSSapi.Domain.Enums;
+
 public class Reservation
 {
     public int ID { get; set; }
@@ -8,5 +10,5 @@ public class Reservation
     public int NumOfPeople { get; set; }
     public int TableNumber { get; set; }
     public int CustomerID { get; set; }
-    public string Status { get; set; } // Enum
+    public ReservationStatus Status { get; set; }
 }

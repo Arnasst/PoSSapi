@@ -1,5 +1,7 @@
 namespace PoSSapi.Domain.Entities;
 
+using PoSSapi.Domain.Enums;
+
 public class User
 {
     public int ID { get; set; }
@@ -10,5 +12,5 @@ public class User
     public string Username { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
-    public string UserType { get; set; } // Enum
+    public UserType UserType { get; set; }
 }
