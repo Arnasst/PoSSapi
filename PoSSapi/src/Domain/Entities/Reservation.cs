@@ -9,6 +9,6 @@ public class Reservation
     public DateTime Time { get; set; }
     public int NumOfPeople { get; set; }
     public int TableNumber { get; set; }
-    public int CustomerId { get; set; }
+    public User Customer { get; set; }
     public ReservationStatus Status { get; set; }
 }

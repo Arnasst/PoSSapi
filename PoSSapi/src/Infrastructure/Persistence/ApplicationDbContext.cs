@@ -18,14 +18,32 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         _mediator = mediator;
     }
 
-    public DbSet<TodoList> TodoLists => Set<TodoList>();
-    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+    public DbSet<Business> Businesses { get; set; }
+    public DbSet<BusinessLocation> BusinesseLocations { get; set; }
+    public DbSet<Dish> Dishes { get; set; }
+    public DbSet<DishIngredient> DishIngredients { get; set; }
+    public DbSet<Ingredient> Ingredients { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderedDish> OrderedDishes { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        var user = builder.Entity<User>();
 
-        base.OnModelCreating(builder);
+        user
+            .HasMany<Payment>()
+            .WithOne();
+
+        user
+            .HasMany<Reservation>()
+            .WithOne();
+
+        user
+            .HasMany<Order>()
+            .WithOne();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
