@@ -1,7 +1,8 @@
 using PoSSapi.Domain.Entities;
 using PoSSapi.Application.TodoItems.Commands.UserCommands;
 using Microsoft.AspNetCore.Mvc;
-using Template.Application.TodoLists.Queries.Users;
+using PoSSapi.Application.Common.Models;
+using PoSSapi.Application.TodoItems.Queries;
 
 namespace PoSSapi.WebUI.Controllers;
 
@@ -42,10 +43,9 @@ public class UserController : ApiControllerBase
         return NoContent();
     }
 
-        // TODO
-//     [HttpGet("list/findByType")]
-//     public async Task<ActionResult<PaginatedList<TodoItemBriefDto>>> GetUsersByTypeWithPagination([FromQuery] GetUsersWithPaginationQuery query)
-//     {
-//         return await Mediator.Send(query);
-//     }
+    [HttpGet("list/findByType")]
+    public async Task<ActionResult<PaginatedList<User>>> GetUsersByTypeWithPagination([FromQuery] GetUsersWithPaginationQuery query)
+    {
+        return await Mediator.Send(query);
+    }
 }

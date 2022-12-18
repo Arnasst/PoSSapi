@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Application.Common.Exceptions;
 
-namespace Template.Application.TodoLists.Queries.Users;
+namespace PoSSapi.Application.TodoItems.Queries;
 
 public record GetUserQuery : IRequest<User>
 {
