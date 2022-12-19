@@ -1,6 +1,6 @@
 using PoSSapi.Domain.Enums;
 
-namespace PoSSapi.Application.TodoItems.Dtos;
+namespace PoSSapi.Application.UserActions.Dtos;
 
 public class UserDto
 {

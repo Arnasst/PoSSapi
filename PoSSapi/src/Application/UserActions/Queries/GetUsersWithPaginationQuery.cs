@@ -6,9 +6,9 @@ using PoSSapi.Domain.Enums;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Mappings;
 using PoSSapi.Application.Common.Models;
-using PoSSapi.Application.TodoItems.Dtos;
+using PoSSapi.Application.UserActions.Dtos;
 
-namespace PoSSapi.Application.TodoItems.Queries.UserQueries;
+namespace PoSSapi.Application.UserActions.Queries;
 
 public record GetUsersWithPaginationQuery : IRequest<PaginatedList<UserDto>>
 {

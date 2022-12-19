@@ -4,7 +4,7 @@ using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Domain.Entities;
 
-namespace PoSSapi.Application.TodoItems.Commands.UserCommands;
+namespace PoSSapi.Application.UserActions.Commands;
 
 public record DeleteUserCommand(Guid Id) : IRequest;
 

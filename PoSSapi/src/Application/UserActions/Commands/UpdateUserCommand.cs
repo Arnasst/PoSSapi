@@ -5,7 +5,7 @@ using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
 
-namespace PoSSapi.Application.TodoItems.Commands.UserCommands;
+namespace PoSSapi.Application.UserActions.Commands;
 
 public record UpdateUserCommand : IRequest
 {

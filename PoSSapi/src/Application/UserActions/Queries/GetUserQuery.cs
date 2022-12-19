@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
-using PoSSapi.Application.TodoItems.Dtos;
+using PoSSapi.Application.UserActions.Dtos;
 using PoSSapi.Domain.Entities;
 
-namespace PoSSapi.Application.TodoItems.Queries.UserQueries;
+namespace PoSSapi.Application.UserActions.Queries;
 
 public record GetUserQuery : IRequest<UserDto>
 {
