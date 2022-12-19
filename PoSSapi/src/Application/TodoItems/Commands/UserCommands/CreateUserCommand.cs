@@ -4,7 +4,6 @@ using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
-using PoSSapi.Domain.Events;
 
 namespace PoSSapi.Application.TodoItems.Commands.UserCommands;
 
@@ -50,8 +49,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
             Password = request.Password,
             UserType = request.UserType
         };
-
-        entity.AddDomainEvent(new UserCreatedEvent(entity));
 
         _context.Users.Add(entity);
 

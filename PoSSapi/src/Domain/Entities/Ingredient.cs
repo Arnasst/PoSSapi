@@ -2,7 +2,7 @@ namespace PoSSapi.Domain.Entities;
 
 using PoSSapi.Domain.Enums;
 
-public class Ingredient : BaseAuditableEntity
+public class Ingredient
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

@@ -1,6 +1,6 @@
 namespace PoSSapi.Domain.Entities;
 
-public class DishIngredient : BaseAuditableEntity
+public class DishIngredient
 {
     public Guid Id { get; set; }
     public Dish Dish { get; set; }

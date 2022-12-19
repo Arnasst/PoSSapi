@@ -1,6 +1,6 @@
 namespace PoSSapi.Domain.Entities;
 
-public class Discount : BaseAuditableEntity
+public class Discount
 {
     public Guid Id { get; set; }
     public List<Guid> AppliesTo { get; set; }

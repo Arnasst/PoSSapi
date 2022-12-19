@@ -2,7 +2,7 @@ namespace PoSSapi.Domain.Entities;
 
 using PoSSapi.Domain.Enums;
 
-public class Reservation : BaseAuditableEntity
+public class Reservation
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

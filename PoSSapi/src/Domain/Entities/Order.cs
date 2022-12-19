@@ -2,7 +2,7 @@ namespace PoSSapi.Domain.Entities;
 
 using PoSSapi.Domain.Enums;
 
-public class Order : BaseAuditableEntity
+public class Order
 {
     public Guid Id { get; set; }
     public User Customer { get; set; }

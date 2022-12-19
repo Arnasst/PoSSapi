@@ -3,7 +3,6 @@
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Domain.Entities;
-using PoSSapi.Domain.Events;
 
 namespace PoSSapi.Application.TodoItems.Commands.UserCommands;
 
@@ -29,8 +28,6 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
         }
 
         _context.Users.Remove(entity);
-
-        entity.AddDomainEvent(new UserDeletedEvent(entity));
 
         await _context.SaveChangesAsync(cancellationToken);
 

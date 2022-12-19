@@ -1,6 +1,6 @@
 namespace PoSSapi.Domain.Entities;
 
-public class StaffMember : BaseAuditableEntity
+public class StaffMember
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

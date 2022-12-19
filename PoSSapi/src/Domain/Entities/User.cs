@@ -2,7 +2,7 @@ namespace PoSSapi.Domain.Entities;
 
 using PoSSapi.Domain.Enums;
 
-public class User : BaseAuditableEntity
+public class User
 {
     public Guid Id { get; set; }
     public Business Business { get; set; }
