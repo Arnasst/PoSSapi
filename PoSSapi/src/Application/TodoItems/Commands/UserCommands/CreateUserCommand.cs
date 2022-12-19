@@ -21,11 +21,11 @@ public record CreateUserCommand : IRequest<Guid>
     public UserType UserType { get; set; }
 }
 
-public class CreateTodoItemCommandHandler : IRequestHandler<CreateUserCommand, Guid>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
 
-    public CreateTodoItemCommandHandler(IApplicationDbContext context)
+    public CreateUserCommandHandler(IApplicationDbContext context)
     {
         _context = context;
     }

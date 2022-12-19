@@ -20,11 +20,11 @@ public record UpdateUserCommand : IRequest
     public UserType UserType { get; set; }
 }
 
-public class UpdateTodoItemCommandHandler : IRequestHandler<UpdateUserCommand>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public UpdateTodoItemCommandHandler(IApplicationDbContext context)
+    public UpdateUserCommandHandler(IApplicationDbContext context)
     {
         _context = context;
     }

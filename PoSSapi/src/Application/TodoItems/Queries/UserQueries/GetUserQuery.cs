@@ -15,12 +15,12 @@ public record GetUserQuery : IRequest<UserDto>
     public Guid Id { get; init; }
 }
 
-public class ExportTodosQueryHandler : IRequestHandler<GetUserQuery, UserDto>
+public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public ExportTodosQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetUserQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
