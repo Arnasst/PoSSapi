@@ -19,7 +19,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     }
 
     public DbSet<Business> Businesses { get; set; }
-    public DbSet<BusinessLocation> BusinesseLocations { get; set; }
+    public DbSet<BusinessLocation> BusinessLocations { get; set; }
     public DbSet<Dish> Dishes { get; set; }
     public DbSet<DishIngredient> DishIngredients { get; set; }
     public DbSet<Ingredient> Ingredients { get; set; }
@@ -31,19 +31,51 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        var user = builder.Entity<User>();
+        var dishIngredient = builder.Entity<DishIngredient>();
+        var payment = builder.Entity<Payment>();
+        var orderedDish = builder.Entity<OrderedDish>();
+        var business = builder.Entity<Business>();
 
-        user
-            .HasMany<Payment>()
-            .WithOne();
+        dishIngredient
+            .HasOne<Dish>(x => x.Dish)
+            .WithMany(x => x.Ingredients)
+            .HasForeignKey(x => x.DishId);
 
-        user
-            .HasMany<Reservation>()
-            .WithOne();
+        dishIngredient
+            .HasOne<Ingredient>(x => x.Ingredient)
+            .WithMany()
+            .HasForeignKey(x => x.IngredientId);
 
-        user
-            .HasMany<Order>()
-            .WithOne();
+        orderedDish
+            .HasOne<Order>(x => x.Order)
+            .WithMany(x => x.Dishes)
+            .HasForeignKey(x => x.OrderId);
+
+        orderedDish
+            .HasOne<Dish>(x => x.Dish)
+            .WithMany()
+            .HasForeignKey(x => x.DishId);
+
+        payment
+            .HasOne<Order>(x => x.Order)
+            .WithMany(x => x.Payments)
+            .HasForeignKey(x => x.OrderId);
+
+        payment
+            .HasOne<User>(x => x.Customer)
+            .WithMany()
+            .HasForeignKey(x => x.CustomerId);
+
+        business
+            .HasMany<User>()
+            .WithOne(x => x.Business)
+            .HasForeignKey(x => x.BusinessId);
+
+        business
+            .HasMany<BusinessLocation>(x => x.Locations)
+            .WithOne(x => x.Business)
+            .HasForeignKey(x => x.BusinessId);
+
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

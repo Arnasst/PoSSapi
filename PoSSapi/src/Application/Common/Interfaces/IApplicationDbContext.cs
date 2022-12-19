@@ -6,7 +6,7 @@ namespace PoSSapi.Application.Common.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<Business> Businesses { get; set; }
-    DbSet<BusinessLocation> BusinesseLocations { get; set; }
+    DbSet<BusinessLocation> BusinessLocations { get; set; }
     DbSet<Dish> Dishes { get; set; }
     DbSet<DishIngredient> DishIngredients { get; set; }
     DbSet<Ingredient> Ingredients { get; set; }
