@@ -21,7 +21,8 @@ namespace PoSSapi.Infrastructure.Migrations
                 name: "Businesses",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ManagerId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,18 +57,23 @@ namespace PoSSapi.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BusinesseLocations",
+                name: "BusinessLocations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Location = table.Column<string>(type: "TEXT", nullable: false),
+                    Country = table.Column<string>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: false),
+                    Street = table.Column<string>(type: "TEXT", nullable: false),
+                    BuildingNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    Floor = table.Column<int>(type: "INTEGER", nullable: false),
+                    PostCode = table.Column<string>(type: "TEXT", nullable: false),
                     BusinessId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BusinesseLocations", x => x.Id);
+                    table.PrimaryKey("PK_BusinessLocations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BusinesseLocations_Businesses_BusinessId",
+                        name: "FK_BusinessLocations_Businesses_BusinessId",
                         column: x => x.BusinessId,
                         principalTable: "Businesses",
                         principalColumn: "Id",
@@ -86,9 +92,7 @@ namespace PoSSapi.Infrastructure.Migrations
                     Username = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
-                    UserType = table.Column<int>(type: "INTEGER", nullable: false),
-                    Position = table.Column<string>(type: "TEXT", nullable: false),
-                    Salary = table.Column<decimal>(type: "TEXT", nullable: false)
+                    UserType = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,8 +138,7 @@ namespace PoSSapi.Infrastructure.Migrations
                     CustomerId = table.Column<Guid>(type: "TEXT", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CompletionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    Status = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,11 +149,6 @@ namespace PoSSapi.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Orders_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -163,8 +161,7 @@ namespace PoSSapi.Infrastructure.Migrations
                     NumOfPeople = table.Column<int>(type: "INTEGER", nullable: false),
                     TableNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     CustomerId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    Status = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -175,11 +172,6 @@ namespace PoSSapi.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reservations_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -220,8 +212,7 @@ namespace PoSSapi.Infrastructure.Migrations
                     Tip = table.Column<decimal>(type: "TEXT", nullable: false),
                     PaymentOptions = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    CompletionTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    CompletionTime = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,16 +229,11 @@ namespace PoSSapi.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Payments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinesseLocations_BusinessId",
-                table: "BusinesseLocations",
+                name: "IX_BusinessLocations_BusinessId",
+                table: "BusinessLocations",
                 column: "BusinessId");
 
             migrationBuilder.CreateIndex(
@@ -276,11 +262,6 @@ namespace PoSSapi.Infrastructure.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserId",
-                table: "Orders",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Payments_CustomerId",
                 table: "Payments",
                 column: "CustomerId");
@@ -291,19 +272,9 @@ namespace PoSSapi.Infrastructure.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_UserId",
-                table: "Payments",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CustomerId",
                 table: "Reservations",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservations_UserId",
-                table: "Reservations",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_BusinessId",
@@ -315,7 +286,7 @@ namespace PoSSapi.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BusinesseLocations");
+                name: "BusinessLocations");
 
             migrationBuilder.DropTable(
                 name: "DishIngredients");

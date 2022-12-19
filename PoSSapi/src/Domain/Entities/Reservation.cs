@@ -10,5 +10,6 @@ public class Reservation
     public int NumOfPeople { get; set; }
     public int TableNumber { get; set; }
     public User Customer { get; set; }
+    public Guid CustomerId { get; set; }
     public ReservationStatus Status { get; set; }
 }

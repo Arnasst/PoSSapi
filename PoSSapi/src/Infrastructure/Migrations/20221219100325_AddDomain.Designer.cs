@@ -11,7 +11,7 @@ using PoSSapi.Infrastructure.Persistence;
 namespace PoSSapi.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221216165130_AddDomain")]
+    [Migration("20221219100325_AddDomain")]
     partial class AddDomain
     {
         /// <inheritdoc />
@@ -26,6 +26,9 @@ namespace PoSSapi.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Businesses");
@@ -37,10 +40,28 @@ namespace PoSSapi.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("BuildingNumber")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("BusinessId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Location")
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PostCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -48,7 +69,7 @@ namespace PoSSapi.Infrastructure.Migrations
 
                     b.HasIndex("BusinessId");
 
-                    b.ToTable("BusinesseLocations");
+                    b.ToTable("BusinessLocations");
                 });
 
             modelBuilder.Entity("PoSSapi.Domain.Entities.Dish", b =>
@@ -128,14 +149,9 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -194,16 +210,11 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Property<decimal>("Tip")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Payments");
                 });
@@ -233,14 +244,9 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -269,13 +275,6 @@ namespace PoSSapi.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -297,7 +296,7 @@ namespace PoSSapi.Infrastructure.Migrations
             modelBuilder.Entity("PoSSapi.Domain.Entities.BusinessLocation", b =>
                 {
                     b.HasOne("PoSSapi.Domain.Entities.Business", "Business")
-                        .WithMany("Location")
+                        .WithMany("Locations")
                         .HasForeignKey("BusinessId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -327,14 +326,10 @@ namespace PoSSapi.Infrastructure.Migrations
             modelBuilder.Entity("PoSSapi.Domain.Entities.Order", b =>
                 {
                     b.HasOne("PoSSapi.Domain.Entities.User", "Customer")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("PoSSapi.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId");
 
                     b.Navigation("Customer");
                 });
@@ -372,10 +367,6 @@ namespace PoSSapi.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PoSSapi.Domain.Entities.User", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Customer");
 
                     b.Navigation("Order");
@@ -384,14 +375,10 @@ namespace PoSSapi.Infrastructure.Migrations
             modelBuilder.Entity("PoSSapi.Domain.Entities.Reservation", b =>
                 {
                     b.HasOne("PoSSapi.Domain.Entities.User", "Customer")
-                        .WithMany("Reservations")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("PoSSapi.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId");
 
                     b.Navigation("Customer");
                 });
@@ -409,7 +396,7 @@ namespace PoSSapi.Infrastructure.Migrations
 
             modelBuilder.Entity("PoSSapi.Domain.Entities.Business", b =>
                 {
-                    b.Navigation("Location");
+                    b.Navigation("Locations");
                 });
 
             modelBuilder.Entity("PoSSapi.Domain.Entities.Dish", b =>
@@ -422,15 +409,6 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Navigation("Dishes");
 
                     b.Navigation("Payments");
-                });
-
-            modelBuilder.Entity("PoSSapi.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("Payments");
-
-                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

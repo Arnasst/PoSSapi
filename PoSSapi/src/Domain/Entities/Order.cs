@@ -6,6 +6,7 @@ public class Order
 {
     public Guid Id { get; set; }
     public User Customer { get; set; }
+    public Guid CustomerId { get; set; }
     public ICollection<OrderedDish> Dishes { get; set; }
     public ICollection<Payment> Payments { get; set; }
     public DateTime OrderDate { get; set; }
