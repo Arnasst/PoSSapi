@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Application.Common.Interfaces;
@@ -23,35 +24,24 @@ public record UpdateUserCommand : IRequest
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public UpdateUserCommandHandler(IApplicationDbContext context)
+    public UpdateUserCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Users
-            .FindAsync(new object[] { request.Id }, cancellationToken);
-
-        if (entity == null)
-        {
+        var entity = await _context.Users.FindAsync(request.Id) ??
             throw new NotFoundException(nameof(User), request.Id);
-        }
-        var business = await _context.Businesses.FindAsync(request.BusinessId);
-        if (business == null)
-        {
-            throw new NotFoundException(nameof(Business), request.BusinessId);
-        }
 
+        var business = await _context.Businesses.FindAsync(request.BusinessId) ??
+            throw new NotFoundException(nameof(Business), request.BusinessId);
+
+        _mapper.Map(request, entity);
         entity.Business = business;
-        entity.Name = request.Name;
-        entity.Surname = request.Surname;
-        entity.Age = request.Age;
-        entity.Username = request.Username;
-        entity.Email = request.Email;
-        entity.Password = request.Password;
-        entity.UserType = request.UserType;
 
         await _context.SaveChangesAsync(cancellationToken);
 

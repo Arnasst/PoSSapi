@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
@@ -28,15 +26,11 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
 
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var records = await _context.Users
-                .Where(t => t.Id == request.Id)
-                .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+        var user = await _context.Users.FindAsync(request.Id) ?? 
+                    throw new NotFoundException(nameof(User), request.Id);
 
-        if (records.Count == 0)
-        {
-            throw new NotFoundException(nameof(User), request.Id);
-        }
-        return records[0];
+        var userDto = _mapper.Map<UserDto>(user);
+
+        return userDto;
     }
 }
