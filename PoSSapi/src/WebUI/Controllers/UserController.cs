@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Mvc;
+
 using PoSSapi.Domain.Entities;
 using PoSSapi.Application.TodoItems.Commands.UserCommands;
-using Microsoft.AspNetCore.Mvc;
 using PoSSapi.Application.Common.Models;
-using PoSSapi.Application.TodoItems.Queries;
+using PoSSapi.Application.TodoItems.Queries.UserQueries;
+using PoSSapi.Application.TodoItems.Dtos;
 
 namespace PoSSapi.WebUI.Controllers;
 
 public class UserController : ApiControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<User> Get(Guid id)
+    public async Task<UserDto> Get(Guid id)
     {
         var user = await Mediator.Send(new GetUserQuery { Id = id });
 
@@ -44,7 +46,7 @@ public class UserController : ApiControllerBase
     }
 
     [HttpGet("list/findByType")]
-    public async Task<ActionResult<PaginatedList<User>>> GetUsersByTypeWithPagination([FromQuery] GetUsersWithPaginationQuery query)
+    public async Task<ActionResult<PaginatedList<UserDto>>> GetUsersByTypeWithPagination([FromQuery] GetUsersWithPaginationQuery query)
     {
         return await Mediator.Send(query);
     }

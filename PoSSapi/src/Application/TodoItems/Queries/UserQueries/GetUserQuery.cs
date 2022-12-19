@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
-using PoSSapi.Application.Common.Interfaces;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PoSSapi.Domain.Entities;
+
+using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
+using PoSSapi.Application.TodoItems.Dtos;
+using PoSSapi.Domain.Entities;
 
-namespace PoSSapi.Application.TodoItems.Queries;
+namespace PoSSapi.Application.TodoItems.Queries.UserQueries;
 
-public record GetUserQuery : IRequest<User>
+public record GetUserQuery : IRequest<UserDto>
 {
     public Guid Id { get; init; }
 }
 
-public class ExportTodosQueryHandler : IRequestHandler<GetUserQuery, User>
+public class ExportTodosQueryHandler : IRequestHandler<GetUserQuery, UserDto>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -23,10 +26,11 @@ public class ExportTodosQueryHandler : IRequestHandler<GetUserQuery, User>
         _mapper = mapper;
     }
 
-    public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken)
+    public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
         var records = await _context.Users
                 .Where(t => t.Id == request.Id)
+                .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
         if (records.Count == 0)

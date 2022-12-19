@@ -1,8 +1,9 @@
-﻿using PoSSapi.Application.Common.Exceptions;
+﻿using MediatR;
+
+using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
-using MediatR;
 
 namespace PoSSapi.Application.TodoItems.Commands.UserCommands;
 
