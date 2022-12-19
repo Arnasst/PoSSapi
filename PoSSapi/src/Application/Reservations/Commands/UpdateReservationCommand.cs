@@ -23,9 +23,10 @@ public class UpdateReservationCommandHandler : IRequestHandler<UpdateReservation
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public UpdateReservationCommandHandler(IApplicationDbContext context)
+    public UpdateReservationCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<Unit> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
