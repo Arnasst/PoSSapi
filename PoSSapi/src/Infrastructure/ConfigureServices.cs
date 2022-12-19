@@ -1,5 +1,4 @@
 ﻿using PoSSapi.Application.Common.Interfaces;
-using PoSSapi.Infrastructure.Files;
 using PoSSapi.Infrastructure.Persistence;
 using PoSSapi.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +17,6 @@ public static class ConfigureServices
         services.AddScoped<ApplicationDbContextInitialiser>();
 
         services.AddTransient<IDateTime, DateTimeService>();
-        services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
         return services;
     }

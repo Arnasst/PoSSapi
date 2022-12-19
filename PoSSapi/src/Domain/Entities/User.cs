@@ -5,7 +5,8 @@ using PoSSapi.Domain.Enums;
 public class User
 {
     public Guid Id { get; set; }
-    public int BusinessId { get; set; }
+    public Business Business { get; set; }
+    public Guid BusinessId { get; set; }
     public string Name { get; set; }
     public string Surname { get; set; }
     public int Age { get; set; }
