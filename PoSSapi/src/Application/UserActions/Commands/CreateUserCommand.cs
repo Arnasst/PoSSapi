@@ -31,7 +31,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var business = await _context.Businesses.FindAsync(request.BusinessId) ??
+        var business = await _context.Businesses.FindAsync(request.BusinessId, cancellationToken) ??
             throw new NotFoundException(nameof(Business), request.BusinessId);
 
         var entity = new User

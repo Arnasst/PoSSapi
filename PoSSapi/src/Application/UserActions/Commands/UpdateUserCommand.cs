@@ -34,10 +34,10 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
 
     public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Users.FindAsync(request.Id) ??
+        var entity = await _context.Users.FindAsync(request.Id, cancellationToken) ??
             throw new NotFoundException(nameof(User), request.Id);
 
-        var business = await _context.Businesses.FindAsync(request.BusinessId) ??
+        var business = await _context.Businesses.FindAsync(request.BusinessId, cancellationToken) ??
             throw new NotFoundException(nameof(Business), request.BusinessId);
 
         _mapper.Map(request, entity);

@@ -26,7 +26,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
 
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.FindAsync(request.Id) ?? 
+        var user = await _context.Users.FindAsync(request.Id, cancellationToken) ?? 
                     throw new NotFoundException(nameof(User), request.Id);
 
         var userDto = _mapper.Map<UserDto>(user);
