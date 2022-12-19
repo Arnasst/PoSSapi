@@ -1,6 +1,6 @@
 namespace PoSSapi.Domain.Entities;
 
-public class BusinessLocation
+public class BusinessLocation : BaseAuditableEntity
 {
     public Guid Id { get; set; }
     public string Country { get; set; }

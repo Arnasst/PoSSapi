@@ -1,6 +1,6 @@
 namespace PoSSapi.Domain.Entities;
 
-public class OrderedDish
+public class OrderedDish : BaseAuditableEntity
 {
     public Guid Id { get; set; }
     public Order Order { get; set; }
