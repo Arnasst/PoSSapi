@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Domain.Entities;
@@ -5,7 +6,7 @@ using PoSSapi.Domain.Enums;
 
 namespace PoSSapi.Application.Reservations.Commands;
 
-public class CreateReservationCommand : IRequest
+public class CreateReservationCommand : IRequest<Guid>
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
@@ -16,33 +17,38 @@ public class CreateReservationCommand : IRequest
     public ReservationStatus Status { get; init; }
 }
 
-public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand>
+public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CreateReservationCommandHandler(IApplicationDbContext context)
+    public CreateReservationCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(CreateReservationCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateReservationCommand request, CancellationToken cancellationToken)
     {
-        var reservation = new Reservation
-        {
-            Id = request.Id,
-            Name = request.Name,
-            Time = request.Time,
-            NumOfPeople = request.NumOfPeople,
-            TableNumber = request.TableNumber,
-            CustomerId = request.CustomerId,
-            Status = request.Status
-        };
+        var reservation = new Reservation();
+
+        _mapper.Map(request, reservation);
+        // var reservation = new Reservation
+        // {
+        //     Id = request.Id,
+        //     Name = request.Name,
+        //     Time = request.Time,
+        //     NumOfPeople = request.NumOfPeople,
+        //     TableNumber = request.TableNumber,
+        //     CustomerId = request.CustomerId,
+        //     Status = request.Status
+        // };
 
         await _context.Reservations
             .AddAsync(reservation, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return reservation.Id;
     }
 }

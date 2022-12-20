@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PoSSapi.Application.Reservations;
 using PoSSapi.Application.Reservations.Commands;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
@@ -8,25 +9,25 @@ namespace PoSSapi.WebUI.Controllers;
 public class ReservationController : ApiControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ActionResult<Reservation>> GetReservationById(Guid id)
+    public async Task<ActionResult<ReservationDto>> GetReservationById(Guid id)
     {
         return await Mediator.Send(new GetReservationByIdQuery(id));
     }
 
     [HttpGet("list")]
-    public async Task<ActionResult<IQueryable<Reservation>>> GetAllReservations()
+    public async Task<ActionResult<IQueryable<ReservationDto>>> GetAllReservations()
     {
         return Ok(await Mediator.Send(new GetAllReservationsQuery()));
     }
 
     [HttpGet("list/{userId}")]
-    public async Task<ActionResult<IQueryable<Reservation>>> GetUsersReservations(Guid userId)
+    public async Task<ActionResult<IQueryable<ReservationDto>>> GetUsersReservations(Guid userId)
     {
         return Ok(await Mediator.Send(new GetUserReservationsQuery(userId)));
     }
 
     [HttpGet("{status}")]
-    public async Task<ActionResult<IQueryable<Reservation>>> GetReservationsByStatus(ReservationStatus status)
+    public async Task<ActionResult<IQueryable<ReservationDto>>> GetReservationsByStatus(ReservationStatus status)
     {
         return Ok(await Mediator.Send(new GetReservationsByStatusQuery(status)));
     }
@@ -46,9 +47,8 @@ public class ReservationController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Reservation>> CreateReservation(CreateReservationCommand command)
+    public async Task<ActionResult<Guid>> CreateReservation(CreateReservationCommand command)
     {
-        await Mediator.Send(command);
-        return NoContent();
+        return await Mediator.Send(command);
     }
 }
