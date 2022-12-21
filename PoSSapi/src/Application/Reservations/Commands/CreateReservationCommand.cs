@@ -33,16 +33,6 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         var reservation = new Reservation();
 
         _mapper.Map(request, reservation);
-        // var reservation = new Reservation
-        // {
-        //     Id = request.Id,
-        //     Name = request.Name,
-        //     Time = request.Time,
-        //     NumOfPeople = request.NumOfPeople,
-        //     TableNumber = request.TableNumber,
-        //     CustomerId = request.CustomerId,
-        //     Status = request.Status
-        // };
 
         await _context.Reservations
             .AddAsync(reservation, cancellationToken);

@@ -2,7 +2,7 @@ namespace PoSSapi.Application.Reservations;
 
 using PoSSapi.Domain.Enums;
 
-public record struct ReservationDto
+public record ReservationDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
