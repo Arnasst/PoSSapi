@@ -4,7 +4,7 @@ using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Domain.Entities;
 
-namespace PoSSapi.Application.Ingredients.Queries;
+namespace PoSSapi.Application.Ingredients.Commands;
 
 public record DeleteIngredientCommand(Guid Id) : IRequest;
 

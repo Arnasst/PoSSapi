@@ -4,7 +4,7 @@ using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
 
-namespace PoSSapi.Application.Ingredients.Queries;
+namespace PoSSapi.Application.Ingredients.Commands;
 
 public record CreateIngredientCommand : IRequest<Guid>
 {
