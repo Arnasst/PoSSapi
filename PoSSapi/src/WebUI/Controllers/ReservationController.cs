@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using PoSSapi.Application.Common.Models;
 using PoSSapi.Application.Reservations;
 using PoSSapi.Application.Reservations.Commands;
-using PoSSapi.Domain.Entities;
-using PoSSapi.Domain.Enums;
 
 namespace PoSSapi.WebUI.Controllers;
 
@@ -17,18 +15,6 @@ public class ReservationController : ApiControllerBase
 
     [HttpGet("list")]
     public async Task<ActionResult<PaginatedList<ReservationDto>>> GetAllReservations([FromQuery] GetAllReservationsQuery query)
-    {
-        return Ok(await Mediator.Send(query));
-    }
-
-    [HttpGet("list/{userId}")]
-    public async Task<ActionResult<IQueryable<ReservationDto>>> GetUsersReservations(Guid userId)
-    {
-        return Ok(await Mediator.Send(new GetUserReservationsQuery(userId)));
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<IQueryable<ReservationDto>>> GetReservationsByStatus([FromQuery] GetReservationsByStatusQuery query)
     {
         return Ok(await Mediator.Send(query));
     }
