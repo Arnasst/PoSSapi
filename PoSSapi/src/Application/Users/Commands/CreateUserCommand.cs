@@ -5,7 +5,7 @@ using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
 
-namespace PoSSapi.Application.UserActions.Commands;
+namespace PoSSapi.Application.Users.Commands;
 
 public record CreateUserCommand : IRequest<Guid>
 {

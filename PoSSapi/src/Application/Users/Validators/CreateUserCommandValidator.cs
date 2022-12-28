@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using PoSSapi.Application.Users.Commands;
 
-namespace PoSSapi.Application.UserActions.Commands;
+namespace PoSSapi.Application.Users.Validators;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {

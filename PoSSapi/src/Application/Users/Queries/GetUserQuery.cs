@@ -3,10 +3,10 @@ using MediatR;
 
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
-using PoSSapi.Application.UserActions.Dtos;
+using PoSSapi.Application.Users.Dtos;
 using PoSSapi.Domain.Entities;
 
-namespace PoSSapi.Application.UserActions.Queries;
+namespace PoSSapi.Application.Users.Queries;
 
 public record GetUserQuery : IRequest<UserDto>
 {
