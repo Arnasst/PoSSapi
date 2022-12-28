@@ -6,15 +6,16 @@ using PoSSapi.Domain.Enums;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Mappings;
 using PoSSapi.Application.Common.Models;
-using PoSSapi.Application.UserActions.Dtos;
+using PoSSapi.Application.Users.Dtos;
 
-namespace PoSSapi.Application.UserActions.Queries;
+namespace PoSSapi.Application.Users.Queries;
 
 public record GetUsersWithPaginationQuery : IRequest<PaginatedList<UserDto>>
 {
     public UserType UserType { get; init; }
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
+    public string? Username { get; init; }
 }
 
 public class GetUsersWithPaginationQueryHandler : IRequestHandler<GetUsersWithPaginationQuery, PaginatedList<UserDto>>
@@ -30,9 +31,15 @@ public class GetUsersWithPaginationQueryHandler : IRequestHandler<GetUsersWithPa
 
     public async Task<PaginatedList<UserDto>> Handle(GetUsersWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Users
-            .Where(x => x.UserType == request.UserType)
-            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(request.PageNumber, request.PageSize);
+        var users = _context.Users
+            .Where(x => x.UserType == request.UserType);
+        
+        if (!string.IsNullOrEmpty(request.Username))
+        {
+            users = users.Where(x => x.Username.Contains(request.Username));
+        }
+
+        return await users.ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
     }
 }
