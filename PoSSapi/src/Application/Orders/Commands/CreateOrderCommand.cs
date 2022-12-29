@@ -41,9 +41,6 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
             CompletionDate = request.CompletionDate,
             Status = request.Status
         };
-        
-        await _context.Orders
-            .AddAsync(order, cancellationToken);
 
         if (request.DishIds != null)
         {
@@ -62,6 +59,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
                 OrderId = request.Id
             }).ToList();
         }
+        
+        await _context.Orders.AddAsync(order, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
 
