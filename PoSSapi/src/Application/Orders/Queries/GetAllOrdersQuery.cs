@@ -31,31 +31,29 @@ public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, Pagin
 
     public async Task<PaginatedList<Order>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
     {
-        var orders = _context.Orders;
-        IQueryable<Order> orderQuery;
+        IQueryable<Order> orders;
 
         if (request.UserId != null && request.UserId != null)
         {
-            orderQuery = orders
-                .Where(o => o.CustomerId == request.UserId 
-                            && o.Status == request.Status);
+           orders = _context.Orders.Where(o => o.CustomerId == request.UserId 
+                                       && o.Status == request.Status);
         }
         else if (request.UserId != null)
         {
-            orderQuery = orders
+            orders = _context.Orders
                 .Where(x => x.CustomerId == request.UserId);
         }
         else if (request.Status != null)
         {
-            orderQuery = orders
+            orders = _context.Orders
                 .Where(x => x.Status == request.Status);
         }
         else
         {
-            orderQuery = orders;
+            orders = _context.Orders;
         }
 
-        return await orderQuery
+        return await orders
             .ProjectTo<Order>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);
     }

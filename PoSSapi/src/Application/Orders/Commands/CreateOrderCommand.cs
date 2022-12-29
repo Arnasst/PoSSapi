@@ -12,8 +12,7 @@ public class CreateOrderCommand : IRequest<Guid>
 {
     public Guid Id { get; init; }
     public Guid CustomerId { get; init; }
-    public Guid[] DishIds { get; init; }
-    public Guid[] PaymentIds { get; init; }
+    public Guid[]? DishIds { get; init; }
     public DateTime OrderDate { get; init; }
     public DateTime CompletionDate { get; init; }
     public OrderStatus Status { get; init; }
@@ -32,8 +31,6 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
     {
         var customer = await _context.Users.FindAsync(request.CustomerId, cancellationToken) ?? 
                        throw new NotFoundException(nameof(User), request.CustomerId);
-        var dishes = await _context.Dishes.Where(d => request.DishIds.Contains(d.Id))
-            .ToListAsync(cancellationToken);
 
         var order = new Order
         {
@@ -49,12 +46,26 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
             .AddAsync(order, cancellationToken);
         
         await _context.SaveChangesAsync(cancellationToken);
+
+        if (request.DishIds == null)
+        {
+            return order.Id;
+        }
         
-        _context.OrderedDishes.AddRange(dishes.Select(d => new OrderedDish
+        var dishes = await _context.Dishes
+            .Where(d => request.DishIds.Contains(d.Id))
+            .ToListAsync(cancellationToken);
+        
+        if (request.DishIds.Length != dishes.Count)
+        {
+            throw new NotFoundException(nameof(Dish), request.DishIds);
+        }
+        
+        order.Dishes = dishes.Select(d => new OrderedDish
         {
             DishId = d.Id,
             OrderId = request.Id
-        }));
+        }).ToList();
 
         await _context.SaveChangesAsync(cancellationToken);
 

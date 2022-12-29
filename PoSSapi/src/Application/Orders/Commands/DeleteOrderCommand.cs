@@ -27,12 +27,10 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
         
         var orderedDishes = _context.OrderedDishes
             .Where(x => x.OrderId == request.Id);
-
-        _context.OrderedDishes.RemoveRange(orderedDishes);
-        
         var payments = _context.Payments
             .Where(x => x.OrderId == request.Id);
-        
+
+        _context.OrderedDishes.RemoveRange(orderedDishes);
         _context.Payments.RemoveRange(payments);
         await _context.SaveChangesAsync(cancellationToken);
 
