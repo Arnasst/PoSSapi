@@ -44,28 +44,24 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
         
         await _context.Orders
             .AddAsync(order, cancellationToken);
-        
-        await _context.SaveChangesAsync(cancellationToken);
 
-        if (request.DishIds == null)
+        if (request.DishIds != null)
         {
-            return order.Id;
+            var dishes = await _context.Dishes
+                .Where(d => request.DishIds.Contains(d.Id))
+                .ToListAsync(cancellationToken);
+        
+            if (request.DishIds.Length != dishes.Count)
+            {
+                throw new NotFoundException(nameof(Dish), request.DishIds);
+            }
+        
+            order.Dishes = dishes.Select(d => new OrderedDish
+            {
+                DishId = d.Id,
+                OrderId = request.Id
+            }).ToList();
         }
-        
-        var dishes = await _context.Dishes
-            .Where(d => request.DishIds.Contains(d.Id))
-            .ToListAsync(cancellationToken);
-        
-        if (request.DishIds.Length != dishes.Count)
-        {
-            throw new NotFoundException(nameof(Dish), request.DishIds);
-        }
-        
-        order.Dishes = dishes.Select(d => new OrderedDish
-        {
-            DishId = d.Id,
-            OrderId = request.Id
-        }).ToList();
 
         await _context.SaveChangesAsync(cancellationToken);
 

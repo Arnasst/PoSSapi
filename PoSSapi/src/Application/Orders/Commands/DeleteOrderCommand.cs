@@ -21,8 +21,7 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
 
     public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await _context.Orders
-                        .FindAsync(request.Id, cancellationToken)
+        var order = await _context.Orders.FindAsync(request.Id, cancellationToken)
                     ?? throw new NotFoundException(nameof(Order), request.Id);
         
         var orderedDishes = _context.OrderedDishes
@@ -32,8 +31,6 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
 
         _context.OrderedDishes.RemoveRange(orderedDishes);
         _context.Payments.RemoveRange(payments);
-        await _context.SaveChangesAsync(cancellationToken);
-
         _context.Orders.Remove(order);
         await _context.SaveChangesAsync(cancellationToken);
 
