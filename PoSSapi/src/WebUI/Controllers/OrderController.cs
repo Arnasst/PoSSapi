@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection.Orders.Dtos;
 using PoSSapi.Application.Common.Models;
 using PoSSapi.Application.Orders.Commands;
 using PoSSapi.Application.Orders.Queries;
@@ -9,13 +10,13 @@ namespace PoSSapi.WebUI.Controllers;
 public class OrderController : ApiControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ActionResult<Order>> GetOrderById(Guid id)
+    public async Task<ActionResult<OrderDto>> GetOrderById(Guid id)
     {
         return await Mediator.Send(new GetOrderByIdQuery(id));
     }
 
     [HttpGet("list")]
-    public async Task<ActionResult<PaginatedList<Order>>> GetAllOrders([FromQuery] GetAllOrdersQuery query)
+    public async Task<ActionResult<PaginatedList<OrderDto>>> GetAllOrders([FromQuery] GetAllOrdersQuery query)
     {
         return Ok(await Mediator.Send(query));
     }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection.Orders.Dtos;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Mappings;
 using PoSSapi.Application.Common.Models;
@@ -10,7 +11,7 @@ using PoSSapi.Domain.Enums;
 
 namespace PoSSapi.Application.Orders.Queries;
 
-public record GetAllOrdersQuery : IRequest<PaginatedList<Order>>
+public record GetAllOrdersQuery : IRequest<PaginatedList<OrderDto>>
 {
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
@@ -18,7 +19,7 @@ public record GetAllOrdersQuery : IRequest<PaginatedList<Order>>
     public OrderStatus? Status { get; init; }
 }
 
-public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, PaginatedList<Order>>
+public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, PaginatedList<OrderDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -29,7 +30,7 @@ public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, Pagin
         _mapper = mapper;
     }
 
-    public async Task<PaginatedList<Order>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedList<OrderDto>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Order> orders = _context.Orders;
         
@@ -44,7 +45,7 @@ public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, Pagin
         }
 
         return await orders
-            .ProjectTo<Order>(_mapper.ConfigurationProvider)
+            .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);
     }
 }
