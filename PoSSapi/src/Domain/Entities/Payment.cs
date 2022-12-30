@@ -14,5 +14,5 @@ public class Payment
     public decimal Tip { get; set; }
     public PaymentOption PaymentOptions { get; set; }
     public PaymentStatus Status { get; set; }
-    public DateTime CompletionTime { get; set; }
+    public DateTime TimeWhenCompleted { get; set; }
 }
