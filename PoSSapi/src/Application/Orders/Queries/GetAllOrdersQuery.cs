@@ -1,7 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection.Orders.Dtos;
+using PoSSapi.Application.Orders.Dtos;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Mappings;
 using PoSSapi.Application.Common.Models;

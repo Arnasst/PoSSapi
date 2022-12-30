@@ -3,7 +3,7 @@ using PoSSapi.Application.Common.Mappings;
 using PoSSapi.Domain.Entities;
 using PoSSapi.Domain.Enums;
 
-namespace Microsoft.Extensions.DependencyInjection.Orders.Dtos;
+namespace PoSSapi.Application.Orders.Dtos;
 
 public class OrderDto : IMapFrom<Order>
 {
