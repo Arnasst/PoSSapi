@@ -6,7 +6,7 @@ using PoSSapi.Application.Orders.Queries;
 
 namespace PoSSapi.WebUI.Controllers;
 
-public class OrderController : ApiControllerBase
+public class BusinessController : ApiControllerBase
 {
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderDto>> GetOrderById(Guid id)
