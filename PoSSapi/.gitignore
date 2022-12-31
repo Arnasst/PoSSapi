@@ -236,3 +236,6 @@ _Pvt_Extensions
 /PoSSapi.ndproj
 /.mfractor
 src/WebUI/ClientApp/package-lock.json
+
+#Visual Code
+.vscode/
