@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using PoSSapi.Application.Common.Models;
 using PoSSapi.Application.Reports.Commands;
-//using PoSSapi.Application.Reports.Queries;
+using PoSSapi.Application.Reports.Queries;
 using PoSSapi.Application.Reports.Dtos;
 
 namespace PoSSapi.WebUI.Controllers;
@@ -15,8 +15,7 @@ public class ReportController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
-    /*
-    //supported parameters: startTime and endTime, staffId, both
+    //required parameters: startTime, endTime
     [HttpGet("find")]
     public async Task<ActionResult<PaginatedList<ReportDto>>> Find([FromQuery] GetReportsQuery query)
     {
@@ -25,9 +24,8 @@ public class ReportController : ApiControllerBase
 
     //required parameters: startTime, endTime
     [HttpGet("analytics")]
-    public async Task<ActionResult<ReportAnalyticsDto>> GetAnalytics([FromQuery] GetReportsAnalyticsQuery query)
+    public async Task<ActionResult<ReportsAnalyticsDto>> GetAnalytics([FromQuery] GetReportsAnalyticsQuery query)
     {
         return await Mediator.Send(query);
     }
-    */
 }
