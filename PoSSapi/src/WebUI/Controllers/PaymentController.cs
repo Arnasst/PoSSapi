@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using PoSSapi.Application.Common.Models;
 using PoSSapi.Application.Payments.Commands;
-using PoSSapi.Application.Payments.Queries;
+//using PoSSapi.Application.Payments.Queries;
 using PoSSapi.Application.Payments.Dtos;
 
 namespace PoSSapi.WebUI.Controllers;
