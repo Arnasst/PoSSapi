@@ -34,8 +34,8 @@ public class GenerateReportCommandHandler : IRequestHandler<GenerateReportComman
         _mapper.Map(request, entity);
 
         entity.Revenue = _context.Payments
-            .Where(x => x.CompletionTime >= request.StartTime)
-            .Where(x => x.CompletionTime <= request.EndTime)
+            .Where(x => x.TimeWhenCompleted >= request.StartTime)
+            .Where(x => x.TimeWhenCompleted <= request.EndTime)
             .Sum(x => x.PriceOfOrder);
         
         _context.Reports.Add(entity);
