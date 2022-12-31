@@ -1,13 +1,11 @@
-namespace PoSSapi.Domain.Entities;
+namespace PoSSapi.Application.Payments.Dtos;
 
 using PoSSapi.Domain.Enums;
 
-public class Payment
+public record PaymentDto
 {
     public Guid Id { get; set; }
-    public User Customer { get; set; }
     public Guid CustomerId { get; set; }
-    public Order Order { get; set; }
     public Guid OrderId { get; set; }
     public decimal PriceOfOrder { get; set; }
     public decimal Discount { get; set; }
