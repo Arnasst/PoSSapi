@@ -1,15 +1,15 @@
 using AutoMapper;
 using MediatR;
-using PoSSapi.Application.Orders.Dtos;
+using PoSSapi.Application.Businesses.Dtos;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Domain.Entities;
 
 namespace PoSSapi.Application.Businesses.Queries;
 
-public record GetBusinessByIdQuery(Guid Id) : IRequest<Business>;
+public record GetBusinessByIdQuery(Guid Id) : IRequest<BusinessDto>;
 
-public class GetBusinessByIdQueryHandler : IRequestHandler<GetBusinessByIdQuery, Business>
+public class GetBusinessByIdQueryHandler : IRequestHandler<GetBusinessByIdQuery, BusinessDto>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -20,12 +20,12 @@ public class GetBusinessByIdQueryHandler : IRequestHandler<GetBusinessByIdQuery,
         _mapper = mapper;
     }
 
-    public async Task<Business> Handle(GetBusinessByIdQuery request, CancellationToken cancellationToken)
+    public async Task<BusinessDto> Handle(GetBusinessByIdQuery request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
                               .FindAsync(request.Id, cancellationToken)
                           ?? throw new NotFoundException(nameof(Order), request.Id);
 
-        return business;
+        return _mapper.Map<BusinessDto>(business);
     }
 }

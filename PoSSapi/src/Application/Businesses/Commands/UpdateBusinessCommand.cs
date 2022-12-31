@@ -3,7 +3,6 @@ using MediatR;
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Domain.Entities;
-using PoSSapi.Domain.Enums;
 
 namespace PoSSapi.Application.Businesses.Commands;
 
@@ -26,9 +25,11 @@ public class UpdateBusinessCommandHandler : IRequestHandler<UpdateBusinessComman
 
     public async Task<Unit> Handle(UpdateBusinessCommand request, CancellationToken cancellationToken)
     {
+        User? manager = null;
+        
         if (request.ManagerId.HasValue)
         {
-            var manager = await _context.Users.FindAsync(request.ManagerId.Value);
+            manager = await _context.Users.FindAsync(request.ManagerId.Value);
             if (manager == null)
             {
                 throw new NotFoundException(nameof(User), request.ManagerId.Value);
@@ -39,6 +40,7 @@ public class UpdateBusinessCommandHandler : IRequestHandler<UpdateBusinessComman
                        throw new NotFoundException(nameof(Business), request.Id);
         
         _mapper.Map(request, business);
+        business.Manager = manager;
 
         await _context.SaveChangesAsync(cancellationToken);
 
