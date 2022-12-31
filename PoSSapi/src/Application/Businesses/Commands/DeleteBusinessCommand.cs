@@ -21,6 +21,13 @@ public class DeleteBusinessCommandHandler : IRequestHandler<DeleteBusinessComman
 
     public async Task<Unit> Handle(DeleteBusinessCommand request, CancellationToken cancellationToken)
     {
+        var business = await _context.Businesses.FindAsync(request.Id, cancellationToken) ??
+                          throw new NotFoundException(nameof(Business), request.Id);
+
+        _context.Businesses.Remove(business);
+
+        await _context.SaveChangesAsync(cancellationToken);
+        
         return Unit.Value;
     }
 }

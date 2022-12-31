@@ -23,7 +23,7 @@ namespace PoSSapi.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ManagerId")
+                    b.Property<Guid?>("ManagerId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

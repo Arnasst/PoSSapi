@@ -15,8 +15,6 @@ public record GetAllBusinessesQuery : IRequest<PaginatedList<Business>>
 {
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
-    public Guid? UserId { get; init; }
-    public OrderStatus? Status { get; init; }
 }
 
 public class GetAllBusinessesQueryHandler : IRequestHandler<GetAllBusinessesQuery, PaginatedList<Business>>
