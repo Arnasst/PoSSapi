@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
@@ -24,12 +23,10 @@ public record CreatePaymentCommand : IRequest<Guid>
 public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public CreatePaymentCommandHandler(IApplicationDbContext context, IMapper mapper)
+    public CreatePaymentCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<Guid> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
@@ -39,11 +36,18 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         var order = await _context.Orders.FindAsync(request.OrderId, cancellationToken) ??
             throw new NotFoundException(nameof(Order), request.OrderId);
 
-        var entity = new Payment();
-        
-        _mapper.Map(request, entity);
-        entity.Customer = customer;
-        entity.Order = order;
+        var entity = new Payment
+        {
+            Id = request.Id,
+            Customer = customer,
+            Order = order,
+            PriceOfOrder = request.PriceOfOrder,
+            Discount = request.Discount,
+            Tip = request.Tip,
+            PaymentOptions = request.PaymentOptions,
+            Status = request.Status,
+            CompletionTime = request.TimeWhenCompleted
+        };
 
         _context.Payments.Add(entity);
 

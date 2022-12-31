@@ -42,9 +42,14 @@ public class UpdatePaymentCommandHandler : IRequestHandler<UpdatePaymentCommand>
         var order = await _context.Orders.FindAsync(request.OrderId, cancellationToken) ??
             throw new NotFoundException(nameof(Order), request.OrderId);
 
-        _mapper.Map(request, entity);
         entity.Customer = customer;
         entity.Order = order;
+        entity.PriceOfOrder = request.PriceOfOrder;
+        entity.Discount = request.Discount;
+        entity.Tip = request.Tip;
+        entity.PaymentOptions = request.PaymentOptions;
+        entity.Status = request.Status;
+        entity.CompletionTime = request.TimeWhenCompleted;
 
         await _context.SaveChangesAsync(cancellationToken);
 

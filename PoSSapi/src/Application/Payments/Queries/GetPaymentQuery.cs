@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Exceptions;
@@ -16,12 +15,10 @@ public record GetPaymentQuery : IRequest<PaymentDto>
 public class GetPaymentQueryHandler : IRequestHandler<GetPaymentQuery, PaymentDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetPaymentQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetPaymentQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<PaymentDto> Handle(GetPaymentQuery request, CancellationToken cancellationToken)
@@ -29,9 +26,17 @@ public class GetPaymentQueryHandler : IRequestHandler<GetPaymentQuery, PaymentDt
         var payment = await _context.Payments.FindAsync(request.Id, cancellationToken) ?? 
                     throw new NotFoundException(nameof(Payment), request.Id);
 
-        var paymentDto = _mapper.Map<PaymentDto>(payment);
-        paymentDto.CustomerId = payment.Customer.Id;
-        paymentDto.OrderId = payment.Order.Id;
+        var paymentDto = new PaymentDto {
+            Id = request.Id,
+            CustomerId = payment.Customer.Id,
+            OrderId = payment.Order.Id,
+            PriceOfOrder = payment.PriceOfOrder,
+            Discount = payment.Discount,
+            Tip = payment.Tip,
+            PaymentOptions = payment.PaymentOptions,
+            Status = payment.Status,
+            TimeWhenCompleted = payment.CompletionTime
+        };
 
         return paymentDto;
     }
