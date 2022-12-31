@@ -22,9 +22,8 @@ public class GetBusinessByIdQueryHandler : IRequestHandler<GetBusinessByIdQuery,
 
     public async Task<BusinessDto> Handle(GetBusinessByIdQuery request, CancellationToken cancellationToken)
     {
-        var business = await _context.Businesses
-                              .FindAsync(request.Id, cancellationToken)
-                          ?? throw new NotFoundException(nameof(Order), request.Id);
+        var business = await _context.Businesses.FindAsync(request.Id, cancellationToken) ??
+                       throw new NotFoundException(nameof(Business), request.Id);
 
         return _mapper.Map<BusinessDto>(business);
     }

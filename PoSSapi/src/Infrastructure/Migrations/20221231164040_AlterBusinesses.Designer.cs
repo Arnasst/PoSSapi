@@ -11,7 +11,7 @@ using PoSSapi.Infrastructure.Persistence;
 namespace PoSSapi.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221231114246_AlterBusinesses")]
+    [Migration("20221231164040_AlterBusinesses")]
     partial class AlterBusinesses
     {
         /// <inheritdoc />
@@ -30,6 +30,9 @@ namespace PoSSapi.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId")
+                        .IsUnique();
 
                     b.ToTable("Businesses");
                 });
@@ -293,6 +296,15 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("PoSSapi.Domain.Entities.Business", b =>
+                {
+                    b.HasOne("PoSSapi.Domain.Entities.User", "Manager")
+                        .WithOne("ManagedBusiness")
+                        .HasForeignKey("PoSSapi.Domain.Entities.Business", "ManagerId");
+
+                    b.Navigation("Manager");
+                });
+
             modelBuilder.Entity("PoSSapi.Domain.Entities.BusinessLocation", b =>
                 {
                     b.HasOne("PoSSapi.Domain.Entities.Business", "Business")
@@ -409,6 +421,12 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Navigation("Dishes");
 
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("PoSSapi.Domain.Entities.User", b =>
+                {
+                    b.Navigation("ManagedBusiness")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

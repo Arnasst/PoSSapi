@@ -23,9 +23,11 @@ public class CreateBusinessCommandHandler : IRequestHandler<CreateBusinessComman
 
     public async Task<Guid> Handle(CreateBusinessCommand request, CancellationToken cancellationToken)
     {
+        User? manager = null;
+        
         if (request.ManagerId.HasValue)
         {
-            var manager = await _context.Users.FindAsync(request.ManagerId.Value);
+            manager = await _context.Users.FindAsync(request.ManagerId.Value);
             if (manager == null)
             {
                 throw new NotFoundException(nameof(User), request.ManagerId.Value);
@@ -35,7 +37,8 @@ public class CreateBusinessCommandHandler : IRequestHandler<CreateBusinessComman
         var business = new Business
         {
             Id = request.Id,
-            ManagerId = request.ManagerId
+            ManagerId = manager?.Id,
+            Manager = manager
         };
         
         _context.Businesses.Add(business);
