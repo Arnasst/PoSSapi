@@ -7,6 +7,7 @@ namespace PoSSapi.Application.Businesses.Dtos;
 public class BusinessDto : IMapFrom<Business>
 {
     public Guid Id { get; set; }
+    public string Name { get; set; }
     public Guid? ManagerId { get; set; }
     
     public void Mapping(Profile profile)

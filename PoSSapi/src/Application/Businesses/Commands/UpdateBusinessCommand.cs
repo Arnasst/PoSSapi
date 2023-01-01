@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation.Results;
 using MediatR;
 using PoSSapi.Application.Common.Exceptions;
 using PoSSapi.Application.Common.Interfaces;
@@ -30,9 +31,18 @@ public class UpdateBusinessCommandHandler : IRequestHandler<UpdateBusinessComman
         if (request.ManagerId.HasValue)
         {
             manager = await _context.Users.FindAsync(request.ManagerId.Value);
+            
             if (manager == null)
             {
                 throw new NotFoundException(nameof(User), request.ManagerId.Value);
+            }
+            
+            if (manager.BusinessId != request.Id)
+            {
+                throw new ValidationException(new List<ValidationFailure>
+                {
+                    new("ManagerId", "Manager is not associated with this business")
+                });
             }
         }
         
