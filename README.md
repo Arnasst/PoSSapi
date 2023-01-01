@@ -1,7 +1,8 @@
 # Point of Sale System
 
 This is an API of a Point of Sale System.
-Based on [Clean Architecture template](https://github.com/jasontaylordev/CleanArchitecture)
+Based on [Clean Architecture template](https://github.com/jasontaylordev/CleanArchitecture).
+Check out this [blog post](https://jasontaylor.dev/clean-architecture-getting-started/) for more information.
 
 ## Implementation sequence
 
@@ -21,5 +22,3 @@ TODO: add a document with what was changed.
 4. After launching the project endpoints can be accessed at <https://localhost:5000/api/> for example to get all businesses you'd send a GET request to <https://localhost:5000/api/business/list>.
 
 Controllers and the endpoints are located in `PoSSapi/src/WebUI/Controllers`.
-
-Check out this [blog post](https://jasontaylor.dev/clean-architecture-getting-started/) for more information.
