@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Orders.Dtos;
 using PoSSapi.Application.Common.Models;
 using PoSSapi.Application.Orders.Commands;
+using PoSSapi.Application.Orders.Dtos;
 using PoSSapi.Application.Orders.Queries;
-using PoSSapi.Domain.Entities;
 
 namespace PoSSapi.WebUI.Controllers;
 

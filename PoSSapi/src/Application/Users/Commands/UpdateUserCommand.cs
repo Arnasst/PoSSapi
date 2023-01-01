@@ -40,7 +40,14 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
         var business = await _context.Businesses.FindAsync(request.BusinessId, cancellationToken) ??
             throw new NotFoundException(nameof(Business), request.BusinessId);
 
-        _mapper.Map(request, entity);
+        entity.Age = request.Age;
+        entity.Name = request.Name;
+        entity.Surname = request.Surname;
+        entity.Username = request.Username;
+        entity.Email = request.Email;
+        entity.Password = request.Password;
+        entity.UserType = request.UserType;
+        entity.BusinessId = request.BusinessId;
         entity.Business = business;
 
         await _context.SaveChangesAsync(cancellationToken);
