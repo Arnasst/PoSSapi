@@ -35,6 +35,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         var payment = builder.Entity<Payment>();
         var orderedDish = builder.Entity<OrderedDish>();
         var business = builder.Entity<Business>();
+        var user = builder.Entity<User>();
 
         dishIngredient
             .HasOne<Dish>(x => x.Dish)
@@ -76,6 +77,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .WithOne(x => x.Business)
             .HasForeignKey(x => x.BusinessId);
 
+        user
+            .HasOne<Business>(x => x.ManagedBusiness)
+            .WithOne(x => x.Manager)
+            .HasForeignKey<Business>(x => x.ManagerId);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
