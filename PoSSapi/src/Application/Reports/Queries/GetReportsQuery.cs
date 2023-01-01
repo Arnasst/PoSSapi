@@ -12,8 +12,8 @@ namespace PoSSapi.Application.Reports.Queries;
 
 public record GetReportsQuery : IRequest<PaginatedList<ReportDto>>
 {
-    public DateTime StartTime { get; init; }
-    public DateTime EndTime { get; init; }
+    public DateTime Start { get; init; }
+    public DateTime End { get; init; }
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
 }
@@ -32,8 +32,8 @@ public class GetReportsQueryHandler : IRequestHandler<GetReportsQuery, Paginated
     public async Task<PaginatedList<ReportDto>> Handle(GetReportsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Reports
-            .Where(x => x.StartTime >= request.StartTime)
-            .Where(x => x.EndTime <= request.EndTime)
+            .Where(x => x.StartTime >= request.Start)
+            .Where(x => x.EndTime <= request.End)
             .ProjectTo<ReportDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);
     }

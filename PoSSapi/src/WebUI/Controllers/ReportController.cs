@@ -15,14 +15,14 @@ public class ReportController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
-    //required parameters: startTime, endTime
-    [HttpGet("find")]
+    //required parameters: start, end
+    [HttpGet("findByDate")]
     public async Task<ActionResult<PaginatedList<ReportDto>>> Find([FromQuery] GetReportsQuery query)
     {
         return await Mediator.Send(query);
     }
 
-    //required parameters: startTime, endTime
+    //required parameters: start, end
     [HttpGet("analytics")]
     public async Task<ActionResult<ReportsAnalyticsDto>> GetAnalytics([FromQuery] GetReportsAnalyticsQuery query)
     {

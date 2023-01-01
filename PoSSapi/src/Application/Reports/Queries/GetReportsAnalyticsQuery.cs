@@ -10,8 +10,8 @@ namespace PoSSapi.Application.Reports.Queries;
 
 public record GetReportsAnalyticsQuery : IRequest<ReportsAnalyticsDto>
 {
-    public DateTime StartTime { get; init; }
-    public DateTime EndTime { get; init; }
+    public DateTime Start { get; init; }
+    public DateTime End { get; init; }
 }
 
 public class GetReportsAnalyticsQueryHandler : IRequestHandler<GetReportsAnalyticsQuery, ReportsAnalyticsDto>
@@ -27,10 +27,14 @@ public class GetReportsAnalyticsQueryHandler : IRequestHandler<GetReportsAnalyti
 
     public async Task<ReportsAnalyticsDto> Handle(GetReportsAnalyticsQuery request, CancellationToken cancellationToken)
     {
-        var analytics = _mapper.Map<ReportsAnalyticsDto>(request);
+        var analytics = new ReportsAnalyticsDto {
+            StartTime = request.Start,
+            EndTime = request.End
+        };
+        
         analytics.TotalRevenue = _context.Reports
-            .Where(x => x.StartTime >= request.StartTime)
-            .Where(x => x.EndTime <= request.EndTime)
+            .Where(x => x.StartTime >= request.Start)
+            .Where(x => x.EndTime <= request.End)
             .Sum(x => x.Revenue);
 
         return analytics;
