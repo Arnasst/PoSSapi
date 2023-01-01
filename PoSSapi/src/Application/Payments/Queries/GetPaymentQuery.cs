@@ -30,8 +30,8 @@ public class GetPaymentQueryHandler : IRequestHandler<GetPaymentQuery, PaymentDt
                     throw new NotFoundException(nameof(Payment), request.Id);
 
         var paymentDto = _mapper.Map<PaymentDto>(payment);
-        paymentDto.CustomerId = payment.Customer.Id;
-        paymentDto.OrderId = payment.Order.Id;
+        paymentDto.CustomerId = payment.CustomerId;
+        paymentDto.OrderId = payment.OrderId;
 
         return paymentDto;
     }

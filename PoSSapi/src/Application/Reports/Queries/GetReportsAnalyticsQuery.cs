@@ -35,6 +35,7 @@ public class GetReportsAnalyticsQueryHandler : IRequestHandler<GetReportsAnalyti
         analytics.TotalRevenue = _context.Reports
             .Where(x => x.StartTime >= request.Start)
             .Where(x => x.EndTime <= request.End)
+            .ToList<Report>()
             .Sum(x => x.Revenue);
 
         return analytics;

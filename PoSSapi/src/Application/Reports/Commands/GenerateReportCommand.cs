@@ -29,20 +29,26 @@ public class GenerateReportCommandHandler : IRequestHandler<GenerateReportComman
 
     public async Task<ReportDto> Handle(GenerateReportCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Report();
-        
-        _mapper.Map(request, entity);
+        var entity = new Report {
+            Id = request.Id,
+            StartTime = request.StartTime,
+            EndTime = request.EndTime
+        };
 
-        entity.Revenue = _context.Payments
+        var payments = _context.Payments
             .Where(x => x.TimeWhenCompleted >= request.StartTime)
             .Where(x => x.TimeWhenCompleted <= request.EndTime)
-            .Sum(x => x.PriceOfOrder);
-        
+            .ToList<Payment>();
+
+        entity.Revenue = payments.Sum(x => x.PriceOfOrder)
+            + payments.Sum(x => x.Tip)
+            - payments.Sum(x => x.Discount);
+
         _context.Reports.Add(entity);
         await _context.SaveChangesAsync(cancellationToken);
 
         var returnObject = new ReportDto();
-        _mapper.Map(request, returnObject);
+        _mapper.Map(entity, returnObject);
 
         return returnObject;
     }
