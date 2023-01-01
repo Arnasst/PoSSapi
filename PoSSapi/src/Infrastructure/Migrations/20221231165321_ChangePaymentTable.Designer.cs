@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoSSapi.Infrastructure.Persistence;
 
@@ -10,9 +11,11 @@ using PoSSapi.Infrastructure.Persistence;
 namespace PoSSapi.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221231165321_ChangePaymentTable")]
+    partial class ChangePaymentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -23,17 +26,10 @@ namespace PoSSapi.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ManagerId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<Guid>("ManagerId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagerId")
-                        .IsUnique();
 
                     b.ToTable("Businesses");
                 });
@@ -297,15 +293,6 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("PoSSapi.Domain.Entities.Business", b =>
-                {
-                    b.HasOne("PoSSapi.Domain.Entities.User", "Manager")
-                        .WithOne("ManagedBusiness")
-                        .HasForeignKey("PoSSapi.Domain.Entities.Business", "ManagerId");
-
-                    b.Navigation("Manager");
-                });
-
             modelBuilder.Entity("PoSSapi.Domain.Entities.BusinessLocation", b =>
                 {
                     b.HasOne("PoSSapi.Domain.Entities.Business", "Business")
@@ -422,12 +409,6 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Navigation("Dishes");
 
                     b.Navigation("Payments");
-                });
-
-            modelBuilder.Entity("PoSSapi.Domain.Entities.User", b =>
-                {
-                    b.Navigation("ManagedBusiness")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

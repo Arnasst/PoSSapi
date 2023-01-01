@@ -1,8 +1,11 @@
+using AutoMapper;
 using PoSSapi.Domain.Enums;
+using PoSSapi.Application.Common.Mappings;
+using PoSSapi.Domain.Entities;
 
 namespace PoSSapi.Application.Users.Dtos;
 
-public class UserDto
+public class UserDto : IMapFrom<User>
 {
     public Guid Id { get; set; }
     public Guid BusinessId { get; set; }
@@ -13,4 +16,9 @@ public class UserDto
     public string Email { get; set; }
     public string Password { get; set; }
     public UserType UserType { get; set; }
+
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<User, UserDto>();
+    }
 }
