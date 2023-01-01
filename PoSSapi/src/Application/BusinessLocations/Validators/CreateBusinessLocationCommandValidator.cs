@@ -7,8 +7,6 @@ public class CreateBusinessLocationCommandValidator : AbstractValidator<CreateBu
 {
     public CreateBusinessLocationCommandValidator()
     {
-        RuleFor(v => v.Floor)
-            .GreaterThanOrEqualTo(0);
         RuleFor(v => v.BuildingNumber)
             .GreaterThan(0);
     }

@@ -9,7 +9,6 @@ public class UpdateBusinessCommandValidator : AbstractValidator<UpdateBusinessCo
     {
         RuleFor(v => v.Name)
             .NotEmpty()
-            .NotNull()
             .MaximumLength(200);
     }
 }

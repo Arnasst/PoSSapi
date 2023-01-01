@@ -9,7 +9,6 @@ public class CreateBusinessCommandValidator : AbstractValidator<CreateBusinessCo
     {
         RuleFor(v => v.Name)
             .NotEmpty()
-            .NotNull()
             .MaximumLength(200);
     }
 }
