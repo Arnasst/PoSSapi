@@ -9,17 +9,17 @@ PRADa_USM → QuickFix_Technical_Design_Document + API_endpoints.yaml → This
 
 ## Swagger
 
-To view endpoints go to: <https://editor.swagger.io/> and paste in the contents of the API_endpoints.yaml file.
+To view QuickFix described endpoints go to: <https://editor.swagger.io/> and paste in the contents of the API_endpoints.yaml file.
+
+TODO: add a document with what was changed.
 
 ## Getting Started
 
-The easiest way to get started is to install the [NuGet package](https://www.nuget.org/packages/Clean.Architecture.Solution.Template) and run `dotnet new ca-sln`:
-
 1. Install the latest [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 2. Install the latest [Node.js LTS](https://nodejs.org/en/)
-3. Run `dotnet new install Clean.Architecture.Solution.Template` to install the project template
-4. Create a folder for your solution and cd into it (the template will use it as project name)
-5. Run `dotnet new ca-sln` to create a new project
-6. Navigate to `src/WebUI` and launch the project using `dotnet run`
+3. Navigate to `PoSSapi/src/WebUI` and launch the project using `dotnet run`
+4. After launching the project endpoints can be accessed at <https://localhost:5000/api/> for example to get all businesses you'd send a GET request to <https://localhost:5000/api/business/list>.
 
-Check out my [blog post](https://jasontaylor.dev/clean-architecture-getting-started/) for more information.
+Controllers and the endpoints are located in `PoSSapi/src/WebUI/Controllers`.
+
+Check out this [blog post](https://jasontaylor.dev/clean-architecture-getting-started/) for more information.
