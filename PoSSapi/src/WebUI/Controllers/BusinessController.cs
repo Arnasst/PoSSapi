@@ -21,16 +21,21 @@ public class BusinessController : ApiControllerBase
     }
 
     [HttpPut("{id}/modify")]
-    public async Task<ActionResult> UpdateBusiness(UpdateBusinessCommand command)
+    public async Task<ActionResult> UpdateBusiness(Guid id, UpdateBusinessCommand command)
     {
+        if (id != command.Id)
+        {
+            return BadRequest();
+        }
+
         await Mediator.Send(command);
         return NoContent();
     }
 
     [HttpDelete("{id}/modify")]
-    public async Task<ActionResult> DeleteBusiness(DeleteBusinessCommand command)
+    public async Task<ActionResult> DeleteBusiness(Guid id)
     {
-        await Mediator.Send(command);
+        await Mediator.Send(new DeleteBusinessCommand {Id = id});
         return NoContent();
     }
 
