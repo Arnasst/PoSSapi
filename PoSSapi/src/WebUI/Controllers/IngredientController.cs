@@ -20,15 +20,16 @@ public class IngredientController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
-    [HttpPut]
-    public async Task<ActionResult> Update(UpdateIngredientCommand command)
+    [HttpPut("{id}/modify")]
+    public async Task<ActionResult> Update(Guid id, UpdateIngredientCommand command)
     {
+        command.Id = id;
         await Mediator.Send(command);
 
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}/modify")]
     public async Task<ActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteIngredientCommand(id));

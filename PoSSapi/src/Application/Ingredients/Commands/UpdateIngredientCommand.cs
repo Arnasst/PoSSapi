@@ -9,7 +9,7 @@ namespace PoSSapi.Application.Ingredients.Commands;
 
 public record UpdateIngredientCommand : IRequest
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
     public string Name { get; init; }
     public decimal Price { get; init; }
     public int Quantity { get; init; }
