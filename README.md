@@ -12,7 +12,7 @@ PRADa_USM → QuickFix_Technical_Design_Document + API_endpoints.yaml → This
 
 To view QuickFix described endpoints go to: <https://editor.swagger.io/> and paste in the contents of the API_endpoints.yaml file.
 
-TODO: add a document with what was changed.
+The changes to the provided design are described in [QuickFix_DesignChanges.pdf](QuickFix_DesignChanges.pdf).
 
 ## Getting Started
 
