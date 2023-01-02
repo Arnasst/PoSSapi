@@ -40,9 +40,8 @@ public class GenerateReportCommandHandler : IRequestHandler<GenerateReportComman
             .Where(x => x.TimeWhenCompleted <= request.EndTime)
             .ToList<Payment>();
 
-        entity.Revenue = payments.Sum(x => x.PriceOfOrder)
-            + payments.Sum(x => x.Tip)
-            - payments.Sum(x => x.Discount);
+        entity.Revenue = payments.Sum(x => x.PriceOfOrder * (1 - x.Discount / 100))
+            + payments.Sum(x => x.Tip);
 
         _context.Reports.Add(entity);
         await _context.SaveChangesAsync(cancellationToken);
