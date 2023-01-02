@@ -21,16 +21,21 @@ public class OrderController : ApiControllerBase
     }
 
     [HttpPut("{id}/modify")]
-    public async Task<ActionResult> UpdateOrder(UpdateOrderCommand command)
+    public async Task<ActionResult> UpdateOrder(Guid id, UpdateOrderCommand command)
     {
+        if (id != command.Id)
+        {
+            return BadRequest();
+        }
+        
         await Mediator.Send(command);
         return NoContent();
     }
 
     [HttpDelete("{id}/modify")]
-    public async Task<ActionResult> DeleteOrder(DeleteOrderCommand command)
+    public async Task<ActionResult> DeleteOrder(Guid id)
     {
-        await Mediator.Send(command);
+        await Mediator.Send(new DeleteOrderCommand{Id = id});
         return NoContent();
     }
 

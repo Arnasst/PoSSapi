@@ -32,12 +32,15 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
     {
         var order = await _context.Orders.FindAsync(request.Id, cancellationToken)
                     ?? throw new NotFoundException(nameof(Order), request.Id);
+        
+        var customer = await _context.Users.FindAsync(request.CustomerId, cancellationToken)
+                        ?? throw new NotFoundException(nameof(User), request.CustomerId);
+
+        _context.OrderedDishes.Where(d => d.OrderId == request.Id).ToList()
+            .ForEach(d => _context.OrderedDishes.Remove(d));
 
         if (request.DishIds != null)
         {
-            _context.OrderedDishes.Where(d => d.OrderId == request.Id).ToList()
-                .ForEach(d => _context.OrderedDishes.Remove(d));
-
             var dishes = _context.Dishes.Where(d => request.DishIds.Contains(d.Id)).ToList();
 
             if (request.DishIds.Length != dishes.Count)
@@ -48,8 +51,11 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
             order.Dishes = request.DishIds.Select(d => new OrderedDish { DishId = d, OrderId = request.Id })
                 .ToList();
         }
-        
-        _mapper.Map(request, order);
+
+        order.Customer = customer;
+        order.OrderDate = request.OrderDate;
+        order.CompletionDate = request.CompletionDate;
+        order.Status = request.Status;
 
         await _context.SaveChangesAsync(cancellationToken);
 
