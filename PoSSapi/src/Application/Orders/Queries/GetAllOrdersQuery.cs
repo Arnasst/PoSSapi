@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PoSSapi.Application.Orders.Dtos;
 using PoSSapi.Application.Common.Interfaces;
 using PoSSapi.Application.Common.Mappings;
@@ -32,8 +33,10 @@ public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, Pagin
 
     public async Task<PaginatedList<OrderDto>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
     {
-        IQueryable<Order> orders = _context.Orders;
-        
+        IQueryable<Order> orders = _context.Orders
+            .Include(o => o.Payments)
+            .Include(o => o.Dishes);
+
         if (request.UserId != null)
         {
             orders = orders.Where(x => x.CustomerId == request.UserId);
