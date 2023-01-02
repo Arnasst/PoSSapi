@@ -33,7 +33,7 @@ public class GetPaymentsWithPaginationQueryHandler : IRequestHandler<GetPayments
     {
         var payments = _context.Payments.AsQueryable();
         if (request.UserId != null) {
-            payments = payments.Where(x => x.Id == request.UserId);
+            payments = payments.Where(x => x.CustomerId == request.UserId);
         }
         if (request.Status != null) {
             payments = payments.Where(x => x.Status == request.Status);

@@ -39,11 +39,16 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         var order = await _context.Orders.FindAsync(request.OrderId, cancellationToken) ??
             throw new NotFoundException(nameof(Order), request.OrderId);
 
-        var entity = new Payment();
-        
-        _mapper.Map(request, entity);
-        entity.Customer = customer;
-        entity.Order = order;
+        var entity = new Payment {
+            Customer = customer,
+            Order = order,
+            PriceOfOrder = request.PriceOfOrder,
+            Discount = request.Discount,
+            Tip = request.Tip,
+            PaymentOptions = request.PaymentOptions,
+            Status = request.Status,
+            TimeWhenCompleted = request.TimeWhenCompleted
+        };
 
         _context.Payments.Add(entity);
 
