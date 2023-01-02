@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 
 using PoSSapi.Application.Common.Models;
-using PoSSapi.Application.UserActions.Commands;
-using PoSSapi.Application.UserActions.Queries;
-using PoSSapi.Application.UserActions.Dtos;
+using PoSSapi.Application.Users.Commands;
+using PoSSapi.Application.Users.Queries;
+using PoSSapi.Application.Users.Dtos;
 
 namespace PoSSapi.WebUI.Controllers;
 

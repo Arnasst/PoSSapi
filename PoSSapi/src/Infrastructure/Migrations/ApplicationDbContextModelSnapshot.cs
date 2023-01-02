@@ -23,10 +23,17 @@ namespace PoSSapi.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ManagerId")
+                    b.Property<Guid?>("ManagerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId")
+                        .IsUnique();
 
                     b.ToTable("Businesses");
                 });
@@ -183,9 +190,6 @@ namespace PoSSapi.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CompletionTime")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("TEXT");
 
@@ -204,6 +208,9 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("TimeWhenCompleted")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Tip")
                         .HasColumnType("TEXT");
 
@@ -214,6 +221,26 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("PoSSapi.Domain.Entities.Report", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Revenue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("PoSSapi.Domain.Entities.Reservation", b =>
@@ -288,6 +315,15 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.HasIndex("BusinessId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PoSSapi.Domain.Entities.Business", b =>
+                {
+                    b.HasOne("PoSSapi.Domain.Entities.User", "Manager")
+                        .WithOne("ManagedBusiness")
+                        .HasForeignKey("PoSSapi.Domain.Entities.Business", "ManagerId");
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("PoSSapi.Domain.Entities.BusinessLocation", b =>
@@ -406,6 +442,12 @@ namespace PoSSapi.Infrastructure.Migrations
                     b.Navigation("Dishes");
 
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("PoSSapi.Domain.Entities.User", b =>
+                {
+                    b.Navigation("ManagedBusiness")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
