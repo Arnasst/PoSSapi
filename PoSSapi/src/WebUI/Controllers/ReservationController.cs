@@ -27,9 +27,9 @@ public class ReservationController : ApiControllerBase
     }
 
     [HttpDelete("{id}/modify")]
-    public async Task<ActionResult> DeleteReservation(DeleteReservationCommand command)
+    public async Task<ActionResult> DeleteReservation(Guid id)
     {
-        await Mediator.Send(command);
+        await Mediator.Send(new DeleteReservationCommand{Id = id});
         return NoContent();
     }
 
