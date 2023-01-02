@@ -35,7 +35,13 @@ public class UpdateReservationCommandHandler : IRequestHandler<UpdateReservation
             .FindAsync(request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Reservation), request.Id);
 
-        _mapper.Map(request, reservation);
+        reservation.Id = request.Id;
+        reservation.Name = request.Name;
+        reservation.Time = request.Time;
+        reservation.NumOfPeople = request.NumOfPeople;
+        reservation.TableNumber = request.TableNumber;
+        reservation.CustomerId = request.CustomerId;
+        reservation.Status = request.Status;
 
         await _context.SaveChangesAsync(cancellationToken);
 
