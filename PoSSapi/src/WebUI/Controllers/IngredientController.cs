@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-
+using PoSSapi.Application.Common.Models;
+using PoSSapi.Application.Ingredients.Commands;
 using PoSSapi.Application.Ingredients.Queries;
 using PoSSapi.Domain.Entities;
 
@@ -36,19 +37,7 @@ public class IngredientController : ApiControllerBase
     }
 
     [HttpGet("list")]
-    public async Task<ActionResult<IQueryable<Ingredient>>> GetAllIngredientsPaginatedQuery([FromQuery] GetAllIngredientsQuery query)
-    {
-        return Ok(await Mediator.Send(query));
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<Ingredient>> GetIngredientByName([FromQuery] GetIngredientByNameQuery query)
-    {
-        return Ok(await Mediator.Send(query));
-    }
-
-    [HttpGet("list/findByStockStatus")]
-    public async Task<ActionResult<Ingredient>> GetIngredientByName([FromQuery] GetIngredientsByStockStatusQuery query)
+    public async Task<ActionResult<PaginatedList<Ingredient>>> GetAllIngredientsPaginatedQuery([FromQuery] GetAllIngredientsQuery query)
     {
         return Ok(await Mediator.Send(query));
     }

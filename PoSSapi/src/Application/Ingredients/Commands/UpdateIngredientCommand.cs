@@ -16,7 +16,7 @@ public record UpdateIngredientCommand : IRequest
     public StockStatus StockStatus { get; init; }
 }
 
-public class UpdateIngredientCommandHandler : IRequestHandler<UpateIngredientCommand, Unit>
+public class UpdateIngredientCommandHandler : IRequestHandler<UpdateIngredientCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -33,7 +33,10 @@ public class UpdateIngredientCommandHandler : IRequestHandler<UpateIngredientCom
           .FindAsync(request.Id, cancellationToken)
           ?? throw new NotFoundException(nameof(Ingredient), request.Id);
 
-        _mapper.Map(request, ingredient);
+        ingredient.Name = request.Name;
+        ingredient.StockStatus = request.StockStatus;
+        ingredient.Quantity = request.Quantity;
+        ingredient.Price = request.Price;
 
         _context.Ingredients.Update(ingredient);
 

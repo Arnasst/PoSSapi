@@ -6,7 +6,7 @@ using PoSSapi.Domain.Enums;
 
 namespace PoSSapi.Application.Ingredients.Commands;
 
-public record CreateIngredientCommand : IRequest<Guid>
+public class CreateIngredientCommand : IRequest<Guid>
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
@@ -28,9 +28,14 @@ public class CreateIngredientCommandHandler : IRequestHandler<CreateIngredientCo
 
     public async Task<Guid> Handle(CreateIngredientCommand request, CancellationToken cancellationToken)
     {
-        var ingredient = new Ingredient();
-
-        _mapper.Map(request, ingredient);
+        var ingredient = new Ingredient
+        {
+            Id = request.Id,
+            Name = request.Name,
+            Price = request.Price,
+            Quantity = request.Quantity,
+            StockStatus = request.StockStatus
+        };
 
         await _context.Ingredients.AddAsync(ingredient, cancellationToken);
 
